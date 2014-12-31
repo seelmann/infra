@@ -1,0 +1,50 @@
+---
+- hosts: all
+
+  vars_prompt:
+    - name: "hostname"
+      prompt: "Host name"
+      private: no
+
+    - name: "username"
+      prompt: "User name"
+      private: no
+
+    - name: "password"
+      prompt: "User password"
+      private: yes
+      encrypt: "sha512_crypt"
+      salt_size: 8
+
+  tasks:
+    - name: Run installation
+      command: "/root/.oldroot/nfs/install/installimage -a -d sda,sdb -r yes -l 1 -b grub -n {{hostname}} -p /boot:ext2:512M,lvm:vg0:all -v vg0:root:/:ext4:20G,vg0:swap:swap:swap:16G -i images/Debian-77-wheezy-64-minimal.tar.gz"
+
+    - name: Mount root partition
+      mount: name=/mnt src=/dev/vg0/root fstype=ext4 state=mounted
+
+    - name: Install sudo in chroot
+      command: chroot /mnt /bin/bash -c "apt-get update -qq && apt-get install -yqq sudo"
+
+    - name: Create admin user in chroot
+      command: chroot /mnt /bin/bash -c "groupadd {{username}}; useradd {{username}} -m -s /bin/bash -g {{username}} -G sudo -p '{{password}}'"
+
+    # Need the admin user in rescue system to make next authorized_key work
+    - name: Create admin user in rescue system
+      user: name="{{username}}"
+
+    - name: Set authorized key
+      authorized_key: user="{{username}}" key="{{item}}" path="/mnt/home/{{username}}/.ssh/authorized_keys"
+      with_file:
+        - ~/.ssh/id_rsa.pub
+
+    - name: Disallow password authentication
+      lineinfile: dest=/mnt/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+
+    - name: Disallow root login
+      lineinfile: dest=/mnt/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+
+    - name: Unmount root partition
+      mount: name=/mnt src=/dev/vg0/root fstype=ext4 state=unmounted
+
+
