@@ -23,8 +23,8 @@
     - name: Mount root partition
       mount: name=/mnt src=/dev/vg0/root fstype=ext4 state=mounted
 
-    - name: Install sudo in chroot
-      command: chroot /mnt /bin/bash -c "apt-get update -qq && apt-get install -yqq sudo"
+    - name: Install packages required by ansible in chroot
+      command: chroot /mnt /bin/bash -c "apt-get update -qq && apt-get install -yqq sudo python python-apt"
 
     - name: Create admin user in chroot
       command: chroot /mnt /bin/bash -c "groupadd {{username}}; useradd {{username}} -m -s /bin/bash -g {{username}} -G sudo -p '{{password}}'"
