@@ -1,6 +1,5 @@
 ---
 - hosts: rootservers
-  sudo: yes
   roles:
     - common
 
