@@ -1,14 +1,27 @@
 ---
 
-- name: Install KVM packages
+- name: Install libvirt and kvm
   apt: name={{item}} state=present
   with_items:
     - qemu-kvm
     - libvirt-bin
-#    - virtinst
+    - radvd
+
+- name: Install virtinst (without GUI stuff)
+  apt: name=virtinst install_recommends=no state=present
 
 - name: Enable nested virtualization
   copy: src=nested-virtualization.conf dest=/etc/modprobe.d/nested-virtualization.conf
   notify:
     - reload kvm_intel
+
+- name: Check if storage pool is defined
+  command: virsh pool-info vg0
+  register: pool_info_result
+  ignore_errors: True
+
+#- debug: var=pool_info_result
+
+- include: _setup_storage_pool.yml
+  when: pool_info_result.rc != 0
 
