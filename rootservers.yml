@@ -1,6 +1,6 @@
 ---
 - hosts: rootservers
   roles:
-    - common
-    - kvmhost
+    - { role: common, tags: ['common'] }
+    - { role: kvmhost, tags: ['kvm'] }
 
