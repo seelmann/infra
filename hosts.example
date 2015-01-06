@@ -1,4 +1,13 @@
 
+[all:vars]
+ipbase=aaaa:bbbb:cccc:dddd
+
 [rootservers]
-root1.example.com
+root1 ip={{ipbase}}::2 ansible_ssh_host=aaaa:bbbb:cccc:dddd::2
+
+[kvmguests]
+demo1 hypervisor=root1 ip={{ipbase}}:eeee:ffff:0:2 gw_ip={{ipbase}}:eeee:ffff:0:1 prefix=96 ansible_ssh_host={{ip}}
+
+[vms:children]
+kvmguests
 

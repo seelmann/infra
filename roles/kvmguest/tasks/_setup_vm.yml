@@ -1,0 +1,34 @@
+---
+
+- name: Create temp directory
+  file: path=/tmp/{{inventory_hostname}} state=directory
+  delegate_to: "{{hypervisor}}"
+
+- name: Copy preseeding file
+  template: src=preseed.j2 dest=/tmp/{{inventory_hostname}}/preseed.cfg
+  delegate_to: "{{hypervisor}}"
+
+- name: Install VM
+  command: >
+    virt-install
+    --name {{inventory_hostname}}
+    --ram=2048
+    --vcpus=2
+    --cpu=host
+    --os-type=linux
+    --os-variant=debianwheezy
+    --disk=pool=vg0,size=20,bus=virtio
+    --network=network={{inventory_hostname}},model=virtio
+    --location=http://mirror.hetzner.de/debian/packages/dists/wheezy/main/installer-amd64/
+    --initrd-inject=/tmp/{{inventory_hostname}}/preseed.cfg
+    --graphics none
+    --noautoconsole
+    --wait=-1
+    --extra-args="console=ttyS0 keymap=us"
+  delegate_to: "{{hypervisor}}"
+  async: 600
+
+- name: Autostart VM
+  command: virsh autostart {{inventory_hostname}}
+  delegate_to: "{{hypervisor}}"
+

@@ -1,10 +1,16 @@
 
-1. Configure `hosts` inventory file
+Configure `hosts` inventory file
 
-2. Configure `group_vars/all/secret.yml` variables file
+Configure `group_vars/all/secret.yml` variables file
 
-3. Run the playbook
+Run ad-hoc command
 
-        ansible-playbook -i hosts rootservers.yml
+    ansible -i hosts -m ping hostname
+    ansible -i hosts -m setup hostname
+
+Run the playbook
+
+    ansible-playbook -i hosts rootservers.yml
+    ansible-playbook -i hosts vms.yml
 
 

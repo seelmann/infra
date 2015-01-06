@@ -1,11 +1,15 @@
 ---
 
+- name: Create temp directory
+  file: path=/tmp/{{inventory_hostname}} state=directory
+  delegate_to: "{{hypervisor}}"
+
 - name: Copy network definition file
-  template: src=network.j2 dest=/tmp/network-{{inventory_hostname}}.xml
+  template: src=network.j2 dest=/tmp/{{inventory_hostname}}/network.xml
   delegate_to: "{{hypervisor}}"
 
 - name: Define network
-  command: virsh net-define /tmp/network-{{inventory_hostname}}.xml
+  command: virsh net-define /tmp/{{inventory_hostname}}/network.xml
   delegate_to: "{{hypervisor}}"
 
 - name: Start network

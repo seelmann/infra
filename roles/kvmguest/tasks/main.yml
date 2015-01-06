@@ -9,3 +9,14 @@
 - include: _setup_network.yml
   when: net_info_result.rc != 0
 
+
+
+- name: Check if VM is defined
+  command: virsh dominfo {{inventory_hostname}}
+  delegate_to: "{{hypervisor}}"
+  register: dom_info_result
+  ignore_errors: True
+
+- include: _setup_vm.yml
+  when: dom_info_result.rc != 0
+
