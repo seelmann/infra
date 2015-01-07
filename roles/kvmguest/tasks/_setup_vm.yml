@@ -11,14 +11,15 @@
 - name: Install VM
   command: >
     virt-install
-    --name {{inventory_hostname}}
-    --ram=2048
-    --vcpus=2
+    --name={{inventory_hostname}}
+    --ram={{vm.ram}}
+    --vcpus={{vm.cpus}}
     --cpu=host
     --os-type=linux
     --os-variant=debianwheezy
-    --disk=pool=vg0,size=20,bus=virtio
+    --disk=pool=vg0,size={{vm.disk}},bus=virtio
     --network=network={{inventory_hostname}},model=virtio
+    --network=network=default,model=virtio
     --location=http://mirror.hetzner.de/debian/packages/dists/wheezy/main/installer-amd64/
     --initrd-inject=/tmp/{{inventory_hostname}}/preseed.cfg
     --graphics none

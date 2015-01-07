@@ -1,0 +1,5 @@
+vm:
+    ram: 2048
+    cpus: 2
+    disk: 20
+

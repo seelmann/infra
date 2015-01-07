@@ -1,0 +1,6 @@
+---
+- hosts: develops
+  roles:
+    - { role: common, tags: ['common'] }
+    - { role: devtools }
+

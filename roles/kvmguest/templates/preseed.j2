@@ -81,7 +81,7 @@ d-i partman/confirm_nooverwrite boolean true
 #d-i apt-setup/contrib boolean true
 
 ### Package selection
-tasksel tasksel/first multiselect ssh-server
+tasksel tasksel/first multiselect standard, ssh-server
 d-i pkgsel/include string sudo python python-apt
 popularity-contest popularity-contest/participate boolean false
 
@@ -101,5 +101,11 @@ d-i preseed/late_command string \
     chmod 700 /target/home/{{admins[0].username}}/.ssh/authorized_keys; \
     chown 1000:1000 /target/home/{{admins[0].username}}/.ssh/authorized_keys; \
     sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /target/etc/ssh/sshd_config; \
-    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /target/etc/ssh/sshd_config;
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /target/etc/ssh/sshd_config; \
+    echo "" >> /etc/network/interfaces; \
+    echo "allow-hotplug eth1" >> /etc/network/interfaces; \
+    echo "iface eth1 inet dhcp" >> /etc/network/interfaces; \
+    echo "" >> /target/etc/network/interfaces; \
+    echo "allow-hotplug eth1" >> /target/etc/network/interfaces; \
+    echo "iface eth1 inet dhcp" >> /target/etc/network/interfaces;
 
