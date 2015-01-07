@@ -20,14 +20,14 @@
     --disk=pool=vg0,size={{vm.disk}},bus=virtio
     --network=network={{inventory_hostname}},model=virtio
     --network=network=default,model=virtio
-    --location=http://mirror.hetzner.de/debian/packages/dists/wheezy/main/installer-amd64/
+    --location={{vm.distro.location}}
     --initrd-inject=/tmp/{{inventory_hostname}}/preseed.cfg
     --graphics none
     --noautoconsole
     --wait=-1
     --extra-args="console=ttyS0 keymap=us"
   delegate_to: "{{hypervisor}}"
-  async: 600
+  async: 1200
 
 - name: Autostart VM
   command: virsh autostart {{inventory_hostname}}

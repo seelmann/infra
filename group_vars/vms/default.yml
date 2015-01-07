@@ -2,4 +2,9 @@ vm:
     ram: 2048
     cpus: 2
     disk: 20
+    mirror:
+        hostname: mirror.hetzner.de
+        directory: /debian/packages
+    distro:
+        location: http://mirror.hetzner.de/debian/packages/dists/wheezy/main/installer-amd64/
 
