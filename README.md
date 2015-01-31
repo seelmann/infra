@@ -12,5 +12,6 @@ Run the playbook
 
     ansible-playbook -i hosts rootservers.yml
     ansible-playbook -i hosts vms.yml
+    ansible-playbook -i hosts upgrade.yml --limit develop1
 
 

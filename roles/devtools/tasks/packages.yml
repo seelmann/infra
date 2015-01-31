@@ -8,4 +8,8 @@
     - tmux
     - git
     - subversion
+    - maven
+    - htop
+    - iotop
+    - sysstat
 
