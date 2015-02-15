@@ -61,7 +61,7 @@ d-i partman-auto/expert_recipe string               \
             lv_name{ swap }                         \
             method{ swap } format{ }                \
         .                                           \
-        1000 50 1000000 ext4                        \
+        4096 50 4096 ext4                           \
             $defaultignore{ }                       \
             $lvmok{ }                               \
             lv_name{ root }                         \
@@ -70,6 +70,12 @@ d-i partman-auto/expert_recipe string               \
             use_filesystem{ }                       \
             filesystem{ ext4 }                      \
             mountpoint{ / }                         \
+        .                                           \
+        1 50 1000000000 ext4                        \
+            method{ lvm }                           \
+            $lvmok{ }                               \
+            mountpoint{ /tmp/free }                 \
+            lv_name{ free }                         \
         .
 
 d-i partman-partitioning/confirm_write_new_label boolean true
@@ -111,5 +117,6 @@ d-i preseed/late_command string \
     echo "iface eth1 inet dhcp" >> /etc/network/interfaces; \
     echo "" >> /target/etc/network/interfaces; \
     echo "allow-hotplug eth1" >> /target/etc/network/interfaces; \
-    echo "iface eth1 inet dhcp" >> /target/etc/network/interfaces;
+    echo "iface eth1 inet dhcp" >> /target/etc/network/interfaces; \
+    sed -i '/^deb-src/s/^/#/' /target/etc/apt/sources.list
 

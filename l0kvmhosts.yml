@@ -1,0 +1,5 @@
+---
+- hosts: l0kvmhosts
+  roles:
+    - { role: kvmhost, tags: ['kvm'] }
+

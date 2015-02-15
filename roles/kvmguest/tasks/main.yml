@@ -20,3 +20,8 @@
 - include: _setup_vm.yml
   when: dom_info_result.rc != 0
 
+
+
+- name: Remove dummy logical volumne
+  lvol: vg=vg0 lv=free state=absent force=yes
+

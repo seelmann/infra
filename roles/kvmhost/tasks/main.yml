@@ -15,12 +15,23 @@
   notify:
     - reload kvm_intel
 
+- name: Fix permissions for KVM device
+  file: path=/dev/kvm group=kvm
+
+
+- name: Check if default network if defined and started
+  shell: 'virsh net-info default | grep "Active:.*yes"'
+  register: net_info_result
+  ignore_errors: True
+
+- include: _setup_default_network.yml
+  when: net_info_result.rc != 0
+
+
 - name: Check if storage pool is defined
   command: virsh pool-info vg0
   register: pool_info_result
   ignore_errors: True
-
-#- debug: var=pool_info_result
 
 - include: _setup_storage_pool.yml
   when: pool_info_result.rc != 0

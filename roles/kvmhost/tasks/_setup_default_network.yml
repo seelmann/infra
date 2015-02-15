@@ -1,0 +1,20 @@
+---
+
+- name: Undefine default network
+  command: virsh net-undefine default
+
+- name: Create temp directory
+  file: path=/tmp/default state=directory
+
+- name: Copy network definition file
+  template: src=network.j2 dest=/tmp/default/network.xml
+
+- name: Define network
+  command: virsh net-define /tmp/default/network.xml
+
+- name: Start default network
+  command: virsh net-start default
+
+- name: Autostart default network
+  command: virsh net-autostart default
+

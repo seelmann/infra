@@ -1,0 +1,10 @@
+<network>
+  <name>default</name>
+  <forward mode='nat'/>
+  <bridge name='virbr0' stp='on' delay='0' />
+  <ip address='{{default_network}}.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='{{default_network}}.2' end='{{default_network}}.254' />
+    </dhcp>
+  </ip>
+</network>
