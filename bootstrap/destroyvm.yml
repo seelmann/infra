@@ -1,0 +1,19 @@
+---
+
+- hosts: '{{target}}'
+  gather_facts: False
+  serial: 1
+  tasks:
+  - name: Destroy VM
+    command: virsh destroy {{inventory_hostname}}
+    delegate_to: "{{hypervisor}}"
+  - name: Undefine VM
+    command: virsh undefine {{inventory_hostname}}
+    delegate_to: "{{hypervisor}}"
+  - name: Wipe volume
+    command: virsh vol-wipe --pool vg0 --algorithm zero {{inventory_hostname}}.img
+    delegate_to: "{{hypervisor}}"
+  - name: Delete volume
+    command: virsh vol-delete --pool vg0 {{inventory_hostname}}.img
+    delegate_to: "{{hypervisor}}"
+

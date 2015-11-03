@@ -29,6 +29,10 @@
   delegate_to: "{{hypervisor}}"
   async: 1200
 
+- name: Wait for VM restart
+  pause: seconds=30
+  #wait_for: host={{ ip }} port=22
+
 - name: Autostart VM
   command: virsh autostart {{inventory_hostname}}
   delegate_to: "{{hypervisor}}"

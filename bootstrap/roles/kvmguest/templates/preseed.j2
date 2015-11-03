@@ -8,7 +8,7 @@ d-i keymap select us
 d-i netcfg/choose_interface select auto
 d-i netcfg/disable_autoconfig boolean true
 d-i netcfg/get_ipaddress string {{ip}}
-d-i netcfg/get_netmask string ffff:ffff:ffff:ffff:ffff:ffff::
+d-i netcfg/get_netmask string ffff:ffff:ffff:ffff:ffff:ffff:ffff:0000
 d-i netcfg/get_gateway string {{gw_ip}}
 d-i netcfg/get_nameservers string 2a01:4f8:0:a0a1::add:1010 2a01:4f8:0:a102::add:9999 2a01:4f8:0:a111::add:9898
 d-i netcfg/confirm_static boolean true
