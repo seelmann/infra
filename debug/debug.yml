@@ -1,0 +1,23 @@
+---
+- hosts: all
+  gather_facts: False
+  serial: 1
+
+  tasks:
+#    - name: ping
+#      apt: name=python state=present
+#      delegate_to: "{{hypervisor}}"
+
+#    - name: Dump all vars
+#      template: src=templates/dumpall.j2 dest=/tmp/ansible.all
+
+#    - debug: var=hostvars['develop1']
+#    - debug: var=hostvars['demo1']
+#    - debug: var=hostvars['root1']
+#    - debug: var=groups
+
+    - name: Wait
+      pause: seconds=5
+#      local_action: wait_for host=[a:b:c:d::2] port=22 timeout=5
+#      sudo: false
+
