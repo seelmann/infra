@@ -18,7 +18,7 @@
 
   tasks:
     - name: Run installation
-      command: "/root/.oldroot/nfs/install/installimage -a -d sda,sdb -r yes -l 1 -b grub -n {{hostname}} -p /boot:ext2:512M,lvm:vg0:all -v vg0:root:/:ext4:20G,vg0:swap:swap:swap:16G -i images/Debian-77-wheezy-64-minimal.tar.gz"
+      command: "/root/.oldroot/nfs/install/installimage -a -d sda -r no -b grub -n {{hostname}} -p /boot:ext2:512M,lvm:vg0:all -v vg0:root:/:ext4:20G -i images/Debian-82-jessie-64-minimal.tar.gz"
 
     - name: Mount root partition
       mount: name=/mnt src=/dev/vg0/root fstype=ext4 state=mounted
