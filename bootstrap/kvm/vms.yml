@@ -1,8 +1,0 @@
----
-
-- hosts: kvmguests
-  gather_facts: False
-  serial: 1
-  roles:
-    - { role: kvmguest, tags: ['kvm'] }
-

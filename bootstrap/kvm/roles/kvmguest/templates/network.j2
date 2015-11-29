@@ -1,6 +1,0 @@
-<network>
-  <name>{{inventory_hostname}}</name>
-  <forward dev='eth0' mode='route'/>
-  <bridge name='virbr{{inventory_hostname}}' stp='off' forwardDelay='0' />
-  <ip family="ipv6" address="{{gw_ip}}" prefix="{{prefix}}" />
-</network>
