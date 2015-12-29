@@ -1,0 +1,33 @@
+# Loopback device:
+auto lo
+iface lo inet loopback
+
+# device: eth0
+auto eth0
+iface eth0 inet static
+  address     {{ipv4_address}}
+  netmask     255.255.255.255
+  gateway     {{ipv4_gateway}}
+  pointopoint {{ipv4_gateway}}
+
+iface eth0 inet6 static
+  address {{ipv6_address}}
+  netmask 128
+  gateway {{ipv6_gateway}}
+
+# VM-Bridge
+auto br0
+iface br0 inet static
+  address        {{ipv4_address}}
+  netmask        255.255.255.255
+  bridge_stp     off
+  bridge_ports   none
+  bridge_fd      0
+  bridge_maxwait 0
+  # Add additional IPs
+  #up route add -host 56.23.34.56 dev br0
+
+iface br0 inet6 static
+  address {{ipv6_address}}
+  netmask 64
+
