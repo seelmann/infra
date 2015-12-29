@@ -11,3 +11,25 @@
       command: "lxc-create -n {{inventory_hostname}} -t debian -f /tmp/{{inventory_hostname}}.conf -- -r jessie"
       delegate_to: "{{hypervisor}}"
 
+    - name: Install packages required by ansible in chroot
+      command: chroot /var/lib/lxc/{{inventory_hostname}}/rootfs /bin/bash -c "apt-get update -qq && apt-get install -yqq openssh-server sudo python python-apt"
+      delegate_to: "{{hypervisor}}"
+
+    - name: Create admin user in chroot
+      command: chroot /var/lib/lxc/{{inventory_hostname}}/rootfs /bin/bash -c "groupadd {{ansible_ssh_user}}; useradd {{ansible_ssh_user}} -m -s /bin/bash -g {{ansible_ssh_user}} -G sudo -p '{{ansible_sudo_pass|password_hash('sha512')}}'"
+      delegate_to: "{{hypervisor}}"
+
+    - name: Set authorized key
+      authorized_key: user="{{ansible_ssh_user}}" key="{{item}}" path="/var/lib/lxc/{{inventory_hostname}}/rootfs/home/{{ansible_ssh_user}}/.ssh/authorized_keys"
+      with_file:
+        - ~/.ssh/id_rsa.pub
+      delegate_to: "{{hypervisor}}"
+
+    - name: Disallow password authentication
+      lineinfile: dest=/var/lib/lxc/{{inventory_hostname}}/rootfs/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+      delegate_to: "{{hypervisor}}"
+
+    - name: Disallow root login
+      lineinfile: dest=/var/lib/lxc/{{inventory_hostname}}/rootfs/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+      delegate_to: "{{hypervisor}}"
+
