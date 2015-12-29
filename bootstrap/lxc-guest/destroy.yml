@@ -1,0 +1,9 @@
+---
+- hosts: all 
+  gather_facts: False
+
+  tasks:
+    - name: Delete LXC container
+      command: "lxc-destroy -n {{inventory_hostname}}"
+      delegate_to: "{{hypervisor}}"
+

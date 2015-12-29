@@ -1,0 +1,13 @@
+---
+- hosts: all 
+  gather_facts: False
+
+  tasks:
+    - name: Copy configuration
+      template: src=templates/config.j2 dest=/tmp/{{inventory_hostname}}.conf
+      delegate_to: "{{hypervisor}}"
+
+    - name: Create LXC container
+      command: "lxc-create -n {{inventory_hostname}} -t debian -f /tmp/{{inventory_hostname}}.conf -- -r jessie"
+      delegate_to: "{{hypervisor}}"
+
