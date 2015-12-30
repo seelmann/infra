@@ -1,9 +1,0 @@
----
-- hosts: all 
-  gather_facts: False
-
-  tasks:
-    - name: Touch
-      file: path=/tmp/foo state=touch
-      delegate_to: "{{hypervisor}}"
-

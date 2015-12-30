@@ -33,3 +33,7 @@
       lineinfile: dest=/var/lib/lxc/{{inventory_hostname}}/rootfs/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
       delegate_to: "{{hypervisor}}"
 
+    - name: Start LXC container
+      command: "lxc-start -n {{inventory_hostname}} -d"
+      delegate_to: "{{hypervisor}}"
+
