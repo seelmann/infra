@@ -1,0 +1,5 @@
+---
+- hosts: kvm-hosts
+  roles: 
+    - role: kvm-host
+

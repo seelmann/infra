@@ -1,0 +1,21 @@
+---
+
+- name: Install KVM dependencies
+  apt: name={{item}} state=present
+  with_items:
+    - qemu-kvm
+    - libvirt-bin
+    - bridge-utils
+    - debootstrap
+
+- name: Install virtinst (without GUI stuff)
+  apt: name=virtinst install_recommends=no state=present
+
+- name: Enable nested virtualization
+  copy: src=nested-virtualization.conf dest=/etc/modprobe.d/nested-virtualization.conf
+  notify:
+    - reload kvm_intel
+
+- name: Fix permissions for KVM device
+  file: path=/dev/kvm group=kvm
+

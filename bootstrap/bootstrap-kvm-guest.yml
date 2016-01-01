@@ -1,0 +1,14 @@
+---
+- hosts: all
+  gather_facts: False
+  vars:
+    - ansible_sudo: no
+
+  tasks:
+    - include: tasks/check-single-host.yml
+
+    - include: tasks/kvm-install-guest.yml ansible_sudo=yes
+
+    - include: tasks/cleanup-known-hosts.yml
+    - include: tasks/wait-for-ssh-up.yml
+

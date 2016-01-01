@@ -1,0 +1,34 @@
+---
+
+- name: Create temp directory
+  file: path=/tmp/{{inventory_hostname}} state=directory
+  delegate_to: "{{hypervisor}}"
+
+- name: Copy preseeding file
+  template: src=templates/kvm-guest-preseed.j2 dest=/tmp/{{inventory_hostname}}/preseed.cfg
+  delegate_to: "{{hypervisor}}"
+
+- name: Create volume
+  command: lvcreate -L {{vm.disk}}G -n {{inventory_hostname}} vg0
+  delegate_to: "{{hypervisor}}"
+
+- name: Install VM
+  command: >
+    virt-install
+    --name={{inventory_hostname}}
+    --ram={{vm.ram}}
+    --vcpus={{vm.cpus}}
+    --cpu=host
+    --os-type=linux
+    --os-variant=debianwheezy
+    --disk=path=/dev/vg0/{{inventory_hostname}},bus=virtio
+    --network=bridge=br0,model=virtio
+    --location={{vm.distro.location}}
+    --initrd-inject=/tmp/{{inventory_hostname}}/preseed.cfg
+    --graphics none
+    --noautoconsole
+    --wait=-1
+    --extra-args="console=ttyS0 keymap=us"
+  delegate_to: "{{hypervisor}}"
+  async: 1200
+

@@ -1,0 +1,11 @@
+---
+
+- name: reload kvm_intel
+  modprobe: name=kvm_intel state=absent
+  notify:
+    - load kvm_intel
+
+- name: load kvm_intel
+  modprobe: name=kvm_intel state=present
+
+

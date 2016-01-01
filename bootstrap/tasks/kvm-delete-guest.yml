@@ -1,0 +1,20 @@
+---
+
+- name: Destroy VM
+  command: virsh destroy {{inventory_hostname}}
+  delegate_to: "{{hypervisor}}"
+
+- name: Undefine VM
+  command: virsh undefine {{inventory_hostname}}
+  delegate_to: "{{hypervisor}}"
+
+- name: Wipe volume
+  command: shred -z -n0 /dev/vg0/{{inventory_hostname}}
+  delegate_to: "{{hypervisor}}"
+
+- name: Delete volume
+  #command: virsh vol-delete --pool vg0 {{inventory_hostname}}.img
+  #lvol: vg=vg0 lv={{inventory_hostname}} state=absent
+  command: lvremove /dev/vg0/{{inventory_hostname}} -f
+  delegate_to: "{{hypervisor}}"
+
