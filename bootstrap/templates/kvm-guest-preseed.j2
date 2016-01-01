@@ -1,4 +1,4 @@
-#### Contents of the preconfiguration file (for wheezy)
+#### Contents of the preconfiguration file (for jessie)
 
 ### Localization
 d-i debian-installer/locale string en_US
@@ -100,6 +100,7 @@ d-i grub-installer/only_debian boolean true
 
 ### Finishing up the installation
 d-i finish-install/reboot_in_progress note
+d-i grub-installer/bootdev string default
 
 #### Advanced options
 
