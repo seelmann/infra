@@ -1,0 +1,11 @@
+---
+
+- name: Wait until SSH port is down
+  #pause: seconds=5
+  local_action: command nc -z -w 1 {{ansible_ssh_host}} 22
+  register: result
+  until: result.rc == 1
+  retries: 12
+  delay: 10
+  failed_when: result.rc != 1
+

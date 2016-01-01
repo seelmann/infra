@@ -1,0 +1,22 @@
+---
+
+## 1st boot into rescue system
+- include: plays/hetzner-rescue.yml
+
+
+# 2nd install the system
+- hosts: all
+  gather_facts: False
+  tasks:
+    - include: tasks/check-single-host.yml
+    - include: tasks/hetzner-install-rootserver.yml ansible_ssh_user=root
+    - name: Mount root partition
+      mount: name=/mnt src=/dev/vg0/root fstype=ext4 state=mounted
+    - include: tasks/prepare-ansible-node.yml param_rootfs=/mnt param_delegate_to={{inventory_hostname}}
+    - name: Unmount root partition
+      mount: name=/mnt src=/dev/vg0/root fstype=ext4 state=unmounted
+
+
+# 3rd reboot into new system
+- include: plays/hetzner-reboot.yml
+

@@ -1,0 +1,6 @@
+---
+
+- name: Check for single host
+  fail: msg="Single host check failed."
+  when: "{{ play_hosts|length }} != 1"
+

@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+  gather_facts: False
+  vars:
+    - ansible_sudo: no
+  tasks:
+    - include: ../tasks/check-single-host.yml
+    # Boot rescue system
+    - include: ../tasks/hetzner-activate-rescue.yml
+    - include: ../tasks/hetzner-reboot.yml
+    - include: ../tasks/wait-for-ssh-down.yml
+    - include: ../tasks/cleanup-known-hosts.yml
+    # Create the ansible user in rescue system
+    - include: ../tasks/wait-for-ssh-up.yml ansible_ssh_user=root
+    - include: ../tasks/create-ansible-user.yml param_user={{ansible_ssh_user}} param_pass={{ansible_sudo_pass}} ansible_ssh_user=root
+

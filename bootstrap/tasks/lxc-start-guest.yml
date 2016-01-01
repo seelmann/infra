@@ -1,0 +1,6 @@
+---
+
+- name: Start LXC container
+  command: "lxc-start -n {{inventory_hostname}} -d"
+  delegate_to: "{{hypervisor}}"
+
