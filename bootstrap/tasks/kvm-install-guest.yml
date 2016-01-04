@@ -9,7 +9,7 @@
   delegate_to: "{{hypervisor}}"
 
 - name: Create volume
-  command: lvcreate -L {{vm.disk}}G -n {{inventory_hostname}} vg0
+  command: lvcreate -L {{vm.disk}}G -n {{inventory_hostname}} {{hostvars[hypervisor]['crypt_vg']}}
   delegate_to: "{{hypervisor}}"
 
 - name: Install VM
@@ -21,7 +21,7 @@
     --cpu=host
     --os-type=linux
     --os-variant=debianwheezy
-    --disk=path=/dev/vg0/{{inventory_hostname}},bus=virtio
+    --disk=path=/dev/mapper/{{hostvars[hypervisor]['crypt_vg']}}-{{inventory_hostname}},bus=virtio
     --network=bridge=br0,model=virtio
     --location={{vm.distro.location}}
     --initrd-inject=/tmp/{{inventory_hostname}}/preseed.cfg
@@ -31,4 +31,5 @@
     --extra-args="console=ttyS0 keymap=us"
   delegate_to: "{{hypervisor}}"
   async: 1200
+  poll: 30
 

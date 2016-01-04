@@ -5,8 +5,9 @@ Configure `group_vars/all/secret.yml` variables file
 
 Run ad-hoc command
 
-    ansible -i hosts -m ping hostname
-    ansible -i hosts -m setup hostname
+    ansible -m ping hostname
+    ansible -m setup hostname
+    ansible -m debug -a var=hostvars hostname
 
 Run the playbook
 

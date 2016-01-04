@@ -1,0 +1,30 @@
+---
+
+- name: Install network dependencies
+  apt: name={{item}} state=present
+  with_items:
+    - bridge-utils
+
+- name: Copy /etc/resolv.conf
+  template: src=resolv.j2 dest=/etc/resolv.conf
+
+- name: Copy /etc/network/interfaces
+  template: src=interfaces.j2 dest=/etc/network/interfaces
+  register: interfaces_result
+
+- name: Check if bridge br0 exists
+  command: brctl show | grep br1
+  register: brctl_show_result
+  ignore_errors: True 
+
+- name: Setup bridge br0
+  command: brctl addbr br0
+  when: brctl_show_result.rc != 0
+
+- name: Restart network
+  command: systemctl restart networking
+  when: interfaces_result.changed
+
+- name: Enable IP forwarding
+  sysctl: name="net.ipv6.conf.all.forwarding" value=1 sysctl_set=yes
+

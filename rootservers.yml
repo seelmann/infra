@@ -1,5 +1,7 @@
 ---
 - hosts: kvm-hosts
   roles: 
+    - role: vm-host
     - role: kvm-host
+    - role: crypt-storage
 
