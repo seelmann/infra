@@ -1,0 +1,32 @@
+---
+
+- name: Check rescue status for Hetzner server
+  uri:
+    url: "https://robot-ws.your-server.de/boot/{{ipv4_address}}/rescue"
+    method: GET
+    user: "{{hetzner_user}}"
+    password: "{{hetzner_pass}}"
+    force_basic_auth: yes
+    return_content: yes
+    status_code: 200
+  register: result
+  delegate_to: localhost
+
+#- debug: var=result
+#- debug: var=result.content
+#- debug: var=result.json
+#- debug: var=result.json.rescue.active
+
+- name: Activate rescue system for Hetzner server
+  uri:
+    url: "https://robot-ws.your-server.de/boot/{{ipv4_address}}/rescue"
+    method: POST
+    user: "{{hetzner_user}}"
+    password: "{{hetzner_pass}}"
+    force_basic_auth: yes
+    HEADER_Content-Type: "application/x-www-form-urlencoded"
+    body: "os=linux&arch=64&authorized_key={{authorized_key_fingerprint}}"
+    status_code: 200
+  when: result.json.rescue.active == False
+  delegate_to: localhost
+

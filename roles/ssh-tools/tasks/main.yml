@@ -1,0 +1,11 @@
+---
+
+- include: _down.yml
+  when: down
+
+- include: _clean.yml
+  when: clean
+
+- include: _up.yml
+  when: up
+
