@@ -57,5 +57,3 @@
 - name: Create crypted volumne group
   lvg: vg={{crypt_vg}} pvs={{crypt_mapping}} state=present
 
-
-

@@ -15,7 +15,8 @@
 - name: Check if bridge br0 exists
   command: brctl show | grep br1
   register: brctl_show_result
-  ignore_errors: True 
+  failed_when: brctl_show_result.rc != 0 and brctl_show_result.rc != 1
+  changed_when: brctl_show_result.rc != 0
 
 - name: Setup bridge br0
   command: brctl addbr br0

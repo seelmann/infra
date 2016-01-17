@@ -1,15 +1,13 @@
 ipv6_address: 2a01:4f8:190:8243::2
+ipv6_netmask: 128
 ipv6_gateway: fe80::1
 ipv4_address: 144.76.7.68
+ipv4_netmask: 255.255.255.255
 ipv4_gateway: 144.76.7.65
 
 ansible_ssh_host: 2a01:4f8:190:8243::2
 
-crypt_dev_vg: vg0
-crypt_dev_lv: crypt0
-crypt_dev_size: 100G
-crypt_dev: /dev/mapper/{{crypt_dev_vg}}-{{crypt_dev_lv}}
-
+crypt_dev: /dev/md/3
 crypt_name: crypt0
 crypt_mapping: /dev/mapper/{{crypt_name}}
 crypt_vg: cryptvg0

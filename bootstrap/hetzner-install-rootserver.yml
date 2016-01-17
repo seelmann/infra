@@ -8,8 +8,8 @@
 - hosts: rootservers
   gather_facts: False
   vars:
-    ansible_sudo: no
-    ansible_ssh_user: root
+    ansible_become: no
+    ansible_user: root
     param_mountdev: /dev/md1
     param_rootfs: /mnt
     param_delegate_to: "{{inventory_hostname}}"

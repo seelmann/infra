@@ -1,4 +1,4 @@
 ---
 
-ansible_sudo: no
+ansible_become: no
 
