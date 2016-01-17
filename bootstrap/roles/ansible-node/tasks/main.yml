@@ -1,0 +1,59 @@
+---
+
+# Prepares host for Ansible
+# Parameters: param_delegate_to, param_rootfs, param_mountdev
+
+- name: Mount root partition
+  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=mounted
+  when: param_mountdev is defined
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Mount /dev into chroot
+  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=mounted
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Install packages required by ansible in chroot
+  command: chroot {{param_rootfs}} /bin/bash -c "apt-get update -qq && apt-get install -yqq openssh-server sudo python python-apt"
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Check if admin user exists
+  command: chroot {{param_rootfs}} /bin/bash -c "getent passwd {{admin_user}} | grep {{admin_user}}"
+  register: admin_exists_result
+  failed_when: admin_exists_result.rc != 0 and admin_exists_result.rc != 1
+  changed_when: admin_exists_result.rc != 0
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Create admin user in chroot
+  command: chroot {{param_rootfs}} /bin/bash -c "groupadd {{admin_user}}; useradd {{admin_user}} -m -s /bin/bash -g {{admin_user}} -G sudo -p '{{admin_pass|password_hash('sha512')}}'"
+  when: admin_exists_result.rc == 1
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Create .ssh directory
+  command: chroot {{param_rootfs}} su - {{admin_user}} -c "mkdir -p /home/{{admin_user}}/.ssh"
+  delegate_to: "{{param_delegate_to}}"
+  
+- name: Create authorized_keys file
+  command: chroot {{param_rootfs}} su - {{admin_user}} -c "echo {{authorized_key}} > /home/{{admin_user}}/.ssh/authorized_keys"
+#  copy: content={{authorized_key}} dest={{param_rootfs}}/home/{{admin_user}}/.ssh/authorized_keys owner={{admin_user}} group={{admin_user}} mode="u=rw,g=r,o=r"
+#  authorized_key: user="{{admin_user}}" key="{{item}}" path="{{param_rootfs}}/home/{{admin_user}}/.ssh/authorized_keys"
+#  with_file:
+#    - ~/.ssh/id_rsa.pub
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Disallow password authentication
+  lineinfile: dest={{param_rootfs}}/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Disallow root login
+  lineinfile: dest={{param_rootfs}}/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Umnount /dev in chroot
+  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=unmounted
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Unmount root partition
+  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=unmounted
+  when: param_mountdev is defined
+  delegate_to: "{{param_delegate_to}}"
+

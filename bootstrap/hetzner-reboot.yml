@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: False
+  vars:
+    - ansible_sudo: no
+  roles: 
+    - role: assert-single-host
+    - role: hetzner-reboot
+    - { role: ssh-tools, down: True, clean: True, up: True }
+

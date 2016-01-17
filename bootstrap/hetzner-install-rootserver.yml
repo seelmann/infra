@@ -1,0 +1,24 @@
+---
+
+## 1st boot into rescue system
+- include: hetzner-rescue.yml
+
+
+# 2nd install the system
+- hosts: rootservers
+  gather_facts: False
+  vars:
+    ansible_sudo: no
+    ansible_ssh_user: root
+    param_mountdev: /dev/md1
+    param_rootfs: /mnt
+    param_delegate_to: "{{inventory_hostname}}"
+  roles:
+    - role: assert-single-host
+    - role: hetzner-install-rootserver
+    - role: ansible-node
+
+
+# 3rd reboot into new system
+- include: hetzner-reboot.yml
+

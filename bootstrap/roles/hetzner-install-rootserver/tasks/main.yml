@@ -1,0 +1,22 @@
+---
+
+# Install Hetzner root server using installimage
+# Parameters: param_delegate_to, param_rootfs, param_mountdev
+
+- name: Run installation
+  command: "/root/.oldroot/nfs/install/installimage -a -d sda,sdb -r yes -l 1 -b grub -n {{inventory_hostname}} -p /boot:ext2:512M,/:ext4:8G,swap:swap:8G,/toberemoved:ext4:all -i /root/images/Debian-82-jessie-64-minimal.tar.gz"
+  async: 1200
+  poll: 30
+
+- name: Mount root partition
+  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=mounted
+
+- name: Remove /toberemoved from /etc/fstab
+  lineinfile: dest={{param_rootfs}}/etc/fstab regexp="toberemoved" state=absent 
+
+- name: Remove /toberemoved
+  file: path={{param_rootfs}}/toberemoved state=absent
+
+- name: Unmount root partition
+  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=unmounted
+

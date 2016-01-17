@@ -1,8 +1,0 @@
----
-
-- name: Run installation
-  command: "/root/.oldroot/nfs/install/installimage -a -d sda,sdb -r yes -l 1 -b grub -n {{inventory_hostname}} -p /boot:ext2:512M,lvm:vg0:all -v vg0:root:/:ext4:20G,vg0:swap:swap:swap:16G -i images/Debian-82-jessie-64-minimal.tar.gz"
-  #command: "/root/.oldroot/nfs/install/installimage -a -d sda,sdb -r yes -l 1 -b grub -n {{inventory_hostname}} -p /boot:ext2:512M,/:ext4:20G,swap:swap:4G -i images/Debian-82-jessie-64-minimal.tar.gz"
-  async: 1200
-  poll: 30
-
