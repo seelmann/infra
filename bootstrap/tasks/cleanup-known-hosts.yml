@@ -1,6 +1,0 @@
----
-
-- name: Cleanup known_hosts
-  local_action: known_hosts state=absent name={{ansible_ssh_host}}
-  #local_action: "command ssh-keygen -R '{{ansible_ssh_host}}'"
-

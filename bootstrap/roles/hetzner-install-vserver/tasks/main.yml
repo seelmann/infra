@@ -1,0 +1,8 @@
+---
+
+# Install Hetzner vserver using installimage
+
+tasks:
+  - name: Run installation
+    command: "/root/.oldroot/nfs/install/installimage -a -d sda -r no -b grub -n {{inventory_hostname}} -p /boot:ext2:512M,lvm:vg0:all -v vg0:root:/:ext4:20G -i /root/images/Debian-82-jessie-64-minimal.tar.gz"
+
