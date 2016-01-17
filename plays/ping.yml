@@ -1,8 +1,6 @@
 ---
 - hosts: all
   gather_facts: False
-  vars:
-    - ansible_become: no
   roles:
     #- role: assert-single-host
     - { role: ssh-tools, down: False, clean: False, up: True }

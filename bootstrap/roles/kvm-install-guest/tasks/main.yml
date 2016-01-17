@@ -5,7 +5,7 @@
   delegate_to: "{{hypervisor}}"
 
 - name: Copy preseeding file
-  template: src=templates/kvm-guest-preseed.j2 dest=/tmp/{{inventory_hostname}}/preseed.cfg
+  template: src=kvm-guest-preseed.j2 dest=/tmp/{{inventory_hostname}}/preseed.cfg
   delegate_to: "{{hypervisor}}"
 
 - name: Create volume

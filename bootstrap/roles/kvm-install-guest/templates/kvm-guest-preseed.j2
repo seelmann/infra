@@ -8,7 +8,7 @@ d-i keymap select us
 d-i netcfg/choose_interface select auto
 d-i netcfg/disable_autoconfig boolean true
 d-i netcfg/get_ipaddress string {{ipv6_address}}
-d-i netcfg/get_netmask string ffff:ffff:ffff:ffff:ffff:ffff:0000:0000
+d-i netcfg/get_netmask string ffff:ffff:ffff:ffff:0000:0000:0000:0000
 d-i netcfg/get_gateway string {{ipv6_gateway}}
 d-i netcfg/get_nameservers string 2a01:4f8:0:a102::add:9999 2a01:4f8:0:a111::add:9898 2a01:4f8:0:a0a1::add:1010
 d-i netcfg/confirm_static boolean true
@@ -25,11 +25,11 @@ d-i mirror/http/proxy string
 ### Account setup
 d-i passwd/root-login boolean false
 d-i passwd/user-fullname string 
-d-i passwd/username string {{ansible_ssh_user}}
-#d-i passwd/user-password password {{ansible_sudo_pass}}
-#d-i passwd/user-password-again password {{ansible_sudo_pass}}
+d-i passwd/username string {{admin_user}}
+#d-i passwd/user-password password
+#d-i passwd/user-password-again password
 # or encrypted using an MD5 hash.
-d-i passwd/user-password-crypted password {{ansible_sudo_pass|password_hash('sha512')}}
+d-i passwd/user-password-crypted password {{admin_pass|password_hash('sha512')}}
 
 ### Clock and time zone setup
 d-i clock-setup/utc boolean true
@@ -105,12 +105,12 @@ d-i grub-installer/bootdev string default
 #### Advanced options
 
 d-i preseed/late_command string \
-    mkdir /target/home/{{ansible_ssh_user}}/.ssh; \
-    chmod 700 /target/home/{{ansible_ssh_user}}/.ssh; \
-    chown 1000:1000 /target/home/{{ansible_ssh_user}}/.ssh; \
-    echo "{{authorized_key}}" > /target/home/{{ansible_ssh_user}}/.ssh/authorized_keys; \
-    chmod 700 /target/home/{{ansible_ssh_user}}/.ssh/authorized_keys; \
-    chown 1000:1000 /target/home/{{ansible_ssh_user}}/.ssh/authorized_keys; \
+    mkdir /target/home/{{admin_user}}/.ssh; \
+    chmod 700 /target/home/{{admin_user}}/.ssh; \
+    chown 1000:1000 /target/home/{{admin_user}}/.ssh; \
+    echo "{{authorized_key}}" > /target/home/{{admin_user}}/.ssh/authorized_keys; \
+    chmod 700 /target/home/{{admin_user}}/.ssh/authorized_keys; \
+    chown 1000:1000 /target/home/{{admin_user}}/.ssh/authorized_keys; \
     sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /target/etc/ssh/sshd_config; \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /target/etc/ssh/sshd_config; \
     echo "" >> /etc/network/interfaces; \
