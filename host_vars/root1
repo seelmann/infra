@@ -1,9 +1,14 @@
+---
+
 ipv6_address: 2a01:4f8:190:8243::2
 ipv6_netmask: 128
 ipv6_gateway: fe80::1
 ipv4_address: 144.76.7.68
 ipv4_netmask: 255.255.255.255
 ipv4_gateway: 144.76.7.65
+nat_address: 172.16.0.1
+nat_netmask: 255.255.0.0
+bridge_device: br0
 
 ansible_host: 2a01:4f8:190:8243::2
 

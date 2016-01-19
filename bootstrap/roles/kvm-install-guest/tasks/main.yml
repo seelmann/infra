@@ -23,6 +23,7 @@
     --os-variant=debianwheezy
     --disk=path=/dev/mapper/{{hostvars[hypervisor]['crypt_vg']}}-{{inventory_hostname}},bus=virtio
     --network=bridge=br0,model=virtio
+    --rng=type=random,device=/dev/random
     --location={{vm.distro.location}}
     --initrd-inject=/tmp/{{inventory_hostname}}/preseed.cfg
     --graphics none

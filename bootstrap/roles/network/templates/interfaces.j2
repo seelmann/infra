@@ -15,19 +15,29 @@ iface eth0 inet6 static
   netmask {{ipv6_netmask}}
   gateway {{ipv6_gateway}}
 
+{% if bridge_device is defined %}
 # VM-Bridge
-auto br0
-iface br0 inet static
+auto ((bridge_device}}
+iface ((bridge_device}} inet static
+{% if nat_address is not defined %}
   address        {{ipv4_address}}
   netmask        {{ipv4_netmask}}
+{% endif %}
+{% if nat_address is defined %}
+  address        {{nat_address}}
+  netmask        {{nat_netmask}}
+{% endif %}
   bridge_stp     off
   bridge_ports   none
   bridge_fd      0
   bridge_maxwait 0
+{% if nat_address is defined %}
+  up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+{% endif %}
   # Add additional IPs
   #up route add -host 56.23.34.56 dev br0
 
-iface br0 inet6 static
+iface ((bridge_device}} inet6 static
   address {{ipv6_address}}
   netmask 64
-
+{% endif %}

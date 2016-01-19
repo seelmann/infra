@@ -1,0 +1,38 @@
+---
+
+- name: Copy /etc/resolv.conf
+  template: src=resolv.j2 dest=/etc/resolv.conf
+
+- name: Copy /etc/network/interfaces
+  template: src=interfaces.j2 dest=/etc/network/interfaces
+  register: interfaces_result
+
+- name: Install network dependencies
+  apt: name={{item}} state=present
+  with_items:
+    - bridge-utils
+  when: bridge_device is defined
+
+- name: Check if bridge exists
+  command: brctl show | grep {{bridge_device}}
+  register: brctl_show_result
+  failed_when: brctl_show_result.rc != 0 and brctl_show_result.rc != 1
+  changed_when: brctl_show_result.rc != 0
+  when: bridge_device is defined
+
+- name: Setup bridge
+  command: brctl addbr {{bridge_device}}
+  when: bridge_device is defined and brctl_show_result.rc != 0
+
+- name: Enable IPv6 forwarding
+  sysctl: name="net.ipv6.conf.all.forwarding" value=1 sysctl_set=yes
+  when: bridge_device is defined
+
+- name: Enable IPv4 forwarding
+  sysctl: name="net.ipv4.ip_forward=1" value=1 sysctl_set=yes
+  when: bridge_device is defined
+
+- name: Restart network
+  command: systemctl restart networking
+  when: interfaces_result.changed
+
