@@ -1,5 +1,4 @@
 ---
 
-- include: base.yml
-- include: security.yml
+- include: _packages.yml
 

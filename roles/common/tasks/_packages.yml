@@ -10,6 +10,9 @@
     - tmux
     - git
     - tree
+    - wget
+    - curl
     - traceroute
     - iputils-ping
+    - aptitude
 

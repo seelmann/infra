@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  serial: 1
 
   tasks:
     - name: update apt cache
