@@ -1,7 +1,7 @@
 ---
 
 - name: Copy configuration
-  template: src=templates/lxc-guest-config.j2 dest=/tmp/{{inventory_hostname}}.conf
+  template: src=lxc-guest-config.j2 dest=/tmp/{{inventory_hostname}}.conf
   delegate_to: "{{hypervisor}}"
 
 - name: Create LXC container

@@ -1,11 +1,11 @@
 ---
-- hosts: kvm-guests
+- hosts: lxc-guests
   gather_facts: False
   roles:
     - role: assert-single-host
-    - role: kvm-delete-guest
+    - role: lxc-delete-guest
 
-- hosts: kvm-guests
+- hosts: lxc-guests
   gather_facts: False
   vars:
     ansible_become: no

@@ -1,0 +1,18 @@
+# Loopback device:
+auto lo
+iface lo inet loopback
+
+auto br0
+iface br0 inet static
+  address        {{ipv4_address}}
+  netmask        {{ipv4_netmask}}
+  gateway        {{ipv4_gateway}}
+  bridge_ports   eth0
+  bridge_fd      0
+  bridge_maxwait 0
+
+iface br0 inet6 static
+  address {{ipv6_address}}
+  netmask {{ipv6_netmask}}
+  gateway {{ipv6_gateway}}
+

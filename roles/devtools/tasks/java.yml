@@ -18,3 +18,6 @@
 - name: Set Java8 env
   apt: name=oracle-java8-set-default state=latest
 
+- name: Set /dev/urandom as source
+  lineinfile: dest=/usr/lib/jvm/java-8-oracle/jre/lib/security/java.security regexp="^securerandom\.source=" line="securerandom.source=file:/dev/urandom" state=present
+

@@ -1,0 +1,6 @@
+---
+
+- name: Delete LXC container
+  command: "lxc-destroy -n {{inventory_hostname}} -f"
+  delegate_to: "{{hypervisor}}"
+

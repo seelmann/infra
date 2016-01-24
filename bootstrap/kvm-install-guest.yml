@@ -1,9 +1,20 @@
 ---
 - hosts: kvm-guests
   gather_facts: False
-
   roles:
     - role: assert-single-host
     - role: kvm-install-guest
+
+- hosts: kvm-guests
+  gather_facts: False
+  vars:
+    ansible_become: no
+  roles:
     - { role: ssh-tools, down: False, clean: True, up: True }
+
+- hosts: kvm-guests
+  gather_facts: False
+  roles:
+    - role: kvm-guest
+    - role: network
 

@@ -1,0 +1,5 @@
+---
+
+- name: Enable serial console
+  service: name=serial-getty@ttyS0.service enabled=yes state=started
+

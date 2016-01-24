@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: False
   vars:
-    - ansible_become: no
+    ansible_become: no
   roles: 
     - role: assert-single-host
     - role: hetzner-activate-rescue
