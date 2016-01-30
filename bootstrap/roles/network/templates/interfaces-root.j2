@@ -25,8 +25,10 @@ iface br0 inet static
   bridge_fd      0
   bridge_maxwait 0
   up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-  # Add additional IPs
-  #up route add -host 56.23.34.56 dev br0
+{% for additional_ip in ipv4_additional_ips %}
+  up route add -host {{additional_ip}} dev br0
+  down route del -host {{additional_ip}} dev br0
+{% endfor %}
 
 iface br0 inet6 static
   address {{ipv6_address}}
