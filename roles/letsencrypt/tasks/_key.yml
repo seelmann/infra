@@ -1,0 +1,13 @@
+---
+
+- name: Check if private key file exists
+  stat: path={{letsencrypt_key_file}}
+  register: pk
+
+- name: Generate private key file
+  shell: "openssl genrsa 4096 > {{letsencrypt_key_file}}"
+  when: not pk.stat.exists
+
+- name: Set permissions of private key file
+  file: path={{letsencrypt_key_file}} owner=root group=root mode=0601
+

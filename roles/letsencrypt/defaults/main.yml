@@ -1,0 +1,9 @@
+---
+
+letsencrypt_work_dir: /tmp/letsencrypt
+letsencrypt_webroot_dir: /tmp/letsencrypt/webroot
+letsencrypt_acme_dir: "{{letsencrypt_webroot_dir}}/.well-known/acme-challenge"
+letsencrypt_key_file: /etc/ssl/private/{{inventory_hostname}}.key
+letsencrypt_csr_file: /etc/ssl/private/{{inventory_hostname}}.csr
+letsencrypt_crt_file: /etc/ssl/certs/{{inventory_hostname}}.crt
+
