@@ -1,11 +1,27 @@
 ---
 
+- name: Check if VM is running
+  shell: virsh list | grep "{{inventory_hostname}}"
+  register: vm_running_result
+  failed_when: vm_running_result.rc != 0 and vm_running_result.rc != 1
+  changed_when: False
+  delegate_to: "{{hypervisor}}"
+
 - name: Destroy VM
   command: virsh destroy {{inventory_hostname}}
+  when: vm_running_result.rc == 0
+  delegate_to: "{{hypervisor}}"
+
+- name: Check if VM is defined
+  shell: virsh list --all | grep "{{inventory_hostname}}"
+  register: vm_defined_result
+  failed_when: vm_defined_result.rc != 0 and vm_defined_result.rc != 1
+  changed_when: False
   delegate_to: "{{hypervisor}}"
 
 - name: Undefine VM
   command: virsh undefine {{inventory_hostname}}
+  when: vm_defined_result.rc == 0
   delegate_to: "{{hypervisor}}"
 
 - name: Wipe volume
