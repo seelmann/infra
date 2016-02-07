@@ -1,0 +1,41 @@
+---
+
+- name: Configure OpenLDAP
+  debconf:
+    name: slapd
+    question: "{{item.q}}"
+    value: "{{item.v}}"
+    vtype: "{{item.t}}"
+  with_items:
+    - { q: slapd/password1, v: "{{slapd_password}}", t: password }
+    - { q: slapd/password2, v: "{{slapd_password}}", t: password }
+    - { q: slapd/internal/adminpw, v: "{{slapd_password}}", t: password }
+    - { q: slapd/internal/generated_adminpw, v: "{{slapd_password}}", t: password }
+    - { q: slapd/domain, v: "{{network.domain}}", t: string }
+    - { q: shared/organization, v: "{{network.domain}}", t: string }
+    - { q: slapd/backend, v: MDB, t: string }
+
+- name: Install OpenLDAP
+  apt: name={{item}} state=present
+  with_items:
+    - slapd
+    - ldap-utils
+    - ldapvi
+
+- name: Add OpenLDAP user to ssl-cert group
+  user:
+    name: openldap
+    groups: ssl-cert
+    append: yes
+
+- name: Restart OpenLDAP
+  service: name=slapd state=restarted
+
+- name: Configure TLS
+  template:
+    src: tls.ldif.j2
+    dest: /tmp/tls.ldif
+
+- name: Configure TLS
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f /tmp/tls.ldif
+

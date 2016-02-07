@@ -1,0 +1,12 @@
+dn: cn=config
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/{{inventory_hostname}}.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/{{inventory_hostname}}.key
+
+dn: olcDatabase={1}mdb,cn=config
+changetype:  modify
+replace: olcSecurity
+olcSecurity: tls=1
+
