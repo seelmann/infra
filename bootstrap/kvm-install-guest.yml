@@ -12,9 +12,5 @@
   roles:
     - { role: ssh-tools, down: False, clean: True, up: True }
 
-- hosts: kvm-guests
-  gather_facts: False
-  roles:
-    - role: kvm-guest
-    - role: network
+- include: kvm-configure-guest.yml
 

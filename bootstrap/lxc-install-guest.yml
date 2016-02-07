@@ -17,9 +17,5 @@
   roles:
     - { role: ssh-tools, down: False, clean: True, up: True }
 
-- hosts: lxc-guests
-  gather_facts: False
-  roles:
-    - role: network
-    - role: common
+- include: lxc-configure-guest.yml
 

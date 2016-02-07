@@ -1,0 +1,16 @@
+---
+
+- name: Install rsyslog
+  apt: name={{item}} state=present
+  with_items:
+    - rsyslog
+
+- name: Configure rsyslog for LXC guest
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    regexp: ModLoad imklog
+    line: "#$ModLoad imklog"
+    state: present
+  notify:
+    - Restart rsyslog
+

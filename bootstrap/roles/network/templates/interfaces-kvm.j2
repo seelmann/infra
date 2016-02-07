@@ -11,6 +11,8 @@ iface br0 inet static
   bridge_ports   eth0
   bridge_fd      0
   bridge_maxwait 0
+  up route add -net 10.0.0.0/8 dev br0
+  down route del -net 10.0.0.0/8 dev br0
 
 iface br0 inet6 static
   address {{ipv6_address}}

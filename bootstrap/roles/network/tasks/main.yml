@@ -48,3 +48,20 @@
   sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes
   when: bridge_device is defined
 
+- name: Set Hostname
+  hostname: name="{{inventory_hostname}}"
+  notify:
+    - Restart hostname
+
+- name: Build /etc/hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "{{item}} .* {{inventory_hostname}}$"
+    line: "{{item}} {{inventory_hostname}}.{{network.domain}} {{inventory_hostname}}"
+    state: present
+  with_items:
+    - "{{ipv4_address}}"
+    - "{{ipv6_address}}"
+  notify:
+    - Restart hostname
+
