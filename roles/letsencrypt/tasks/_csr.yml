@@ -5,7 +5,7 @@
   register: csr
 
 - name: Generate CSR
-  shell: "openssl req -new -sha256 -key {{letsencrypt_key_file}} -subj '/CN={{domain}}' > {{letsencrypt_csr_file}}"
+  shell: "openssl req -new -sha256 -key {{letsencrypt_key_file}} -subj '/CN={{inventory_hostname}}.{{domain}}' > {{letsencrypt_csr_file}}"
   when: not csr.stat.exists
 
 # View CSR:

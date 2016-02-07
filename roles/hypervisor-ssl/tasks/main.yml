@@ -1,0 +1,33 @@
+---
+
+- name: Install packages
+  apt: name={{item}} state=present
+  with_items:
+    - openssl
+    - ca-certificates
+    - ssl-cert
+
+- name: Slurp private key
+  slurp: src=/etc/ssl/private/{{hypervisor}}.key
+  register: ssl_key
+  delegate_to: "{{hypervisor}}"
+
+- name: Write private key
+  copy:
+    dest: /etc/ssl/private/{{inventory_hostname}}.key
+    content: "{{ ssl_key.content | b64decode }}"
+    mode: 0640
+    owner: root
+    group: ssl-cert
+
+- name: Slurp certificate
+  slurp: src=/etc/ssl/certs/{{hypervisor}}.crt
+  register: ssl_crt
+  delegate_to: "{{hypervisor}}"
+
+- name: Write certificate
+  copy:
+    dest: /etc/ssl/certs/{{inventory_hostname}}.crt
+    content: "{{ ssl_crt.content | b64decode }}"
+    mode: 0644
+
