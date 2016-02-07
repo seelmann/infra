@@ -1,0 +1,47 @@
+---
+
+- name: Allow forward
+  lineinfile:
+    dest: /etc/default/ufw
+    regexp: "^DEFAULT_FORWARD_POLICY="
+    line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
+  notify:
+    - reload ufw
+
+- name: Manage builtins
+  lineinfile:
+    dest: /etc/default/ufw
+    regexp: "^MANAGE_BUILTINS="
+    line: "MANAGE_BUILTINS=yes"
+  notify:
+    - reload ufw
+
+- name: Copy port forwarding rules
+  template:
+    src: "{{item}}.j2"
+    dest: "/etc/ufw/{{item}}"
+  with_items:
+    - nat4
+    - nat6
+
+- name: Register port forwarding rules
+  shell: "cat /etc/ufw/{{item.snippet}}"
+  register: nat
+  with_items:
+    - rule: before
+      snippet: nat4
+    - rule: before6
+      snippet: nat6
+
+#- name: Debug
+#  debug: var=nat.results
+
+- name: Put port forwarding rules into before.rules
+  blockinfile:
+    dest: /etc/ufw/{{item.item.rule}}.rules
+    block: "{{item.stdout}}"
+    insertbefore: "# Don't delete these required lines"
+  with_items: "{{nat.results}}"
+  notify:
+    - reload ufw
+

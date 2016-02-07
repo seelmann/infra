@@ -1,0 +1,22 @@
+---
+
+- name: Install ufw
+  apt: name={{item}} state=present
+  with_items:
+    - ufw
+
+- name: Allow ssh traffic
+  ufw: rule=limit port=ssh proto=tcp
+
+- name: Enable logging
+  ufw: logging=on
+
+- name: Enable ufw
+  ufw: state=enabled
+
+- include: _forwardings.yml
+  when: firewall.forwardings is defined
+
+- include: _rules.yml
+  when: firewall.rules is defined
+

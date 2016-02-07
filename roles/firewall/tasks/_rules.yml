@@ -1,0 +1,12 @@
+---
+
+- name: Allow incoming traffic
+  ufw:
+    rule: "{{item.rule}}"
+    port: "{{item.port}}"
+    src: "{{item.src}}"
+    proto: tcp
+  with_items: "{{firewall.rules}}"
+  notify:
+    - reload ufw
+
