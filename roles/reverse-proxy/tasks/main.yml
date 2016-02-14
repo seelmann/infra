@@ -13,7 +13,7 @@
   failed_when: disable_result.rc != 0 and disable_result.rc != 1
   changed_when: disable_result.rc != 0
   notify:
-    - restart apache2
+    - Restart apache2
 
 - name: Disable port 80
   lineinfile:
@@ -22,23 +22,26 @@
     line: "#Listen 80"
     state: present
   notify:
-    - restart apache2
+    - Restart apache2
 
 - name: Enable modules
   # a2enmod ssl
   apache2_module: name={{item}} state=present
   notify:
-    - restart apache2
+    - Restart apache2
   with_items:
     - ssl
     - authnz_ldap
+    - proxy
+    - proxy_http
+    - headers
 
 - name: Copy reverse proxy config
   template:
     src: reverse-proxy.j2
     dest: /etc/apache2/sites-available/reverse-proxy.conf
   notify:
-    - restart apache2
+    - Restart apache2
 
 - name: Enable reverse proxy site
   shell: a2ensite reverse-proxy | grep "already enabled"
@@ -46,6 +49,6 @@
   failed_when: enable_rp_result.rc != 0 and enable_rp_result.rc != 1
   changed_when: enable_rp_result.rc != 0
   notify:
-    - restart apache2
+    - Restart apache2
 
 

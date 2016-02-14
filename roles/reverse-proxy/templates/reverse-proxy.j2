@@ -16,6 +16,17 @@ ServerName localhost
   SSlCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA;
   SSLHonorCipherOrder on
 
+  #ProxyPreserveHost On
+  ProxyAddHeaders On
+  #RequestHeader unset Authorization
+{% for item in reverse_proxy.redirects %}
+  Redirect {{item.status}} {{item.path}} {{item.url}}
+{% endfor %}
+{% for item in reverse_proxy.passes %}
+  ProxyPass {{item.path}} {{item.url}}
+  ProxyPassReverse {{item.path}} {{item.url}}
+{% endfor %}
+
   <Location />
     SSLRequireSSL
 
@@ -23,7 +34,11 @@ ServerName localhost
     AuthName "LDAP"
     AuthBasicProvider ldap
     AuthLDAPURL "ldap://{{ldap.host}}:389/{{ldap.baseDN}}?uid?sub?(objectClass=inetOrgPerson)" STARTTLS
-    require valid-user
+
+{% for item in reverse_proxy.noauths %}
+    Require expr %{REQUEST_URI} in { '{{item.path}}' }
+{% endfor %}
+    Require valid-user
   </Location>
 
 </VirtualHost>
