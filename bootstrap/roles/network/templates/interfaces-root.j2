@@ -24,7 +24,6 @@ iface br0 inet static
   bridge_ports   none
   bridge_fd      0
   bridge_maxwait 0
-  up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 {% for additional_ip in ipv4_additional_ips %}
   up route add -host {{additional_ip}} dev br0
   down route del -host {{additional_ip}} dev br0

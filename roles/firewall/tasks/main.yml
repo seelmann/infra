@@ -14,8 +14,8 @@
 - name: Enable ufw
   ufw: state=enabled
 
-- include: _forwardings.yml
-  when: firewall.forwardings is defined
+- include: _nats.yml
+  when: firewall.forwardings is defined or firewall.nats is defined
 
 - include: _rules.yml
   when: firewall.rules is defined

@@ -1,9 +1,16 @@
 *nat
 :PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
 -F
+{% if firewall.forwardings is defined %}
 {% for item in firewall.forwardings %}
 -A PREROUTING -p tcp --dst {{ipv4_address}} --dport {{item.port}} -j DNAT --to {{hostvars[item.to]['ipv4_address']}}:{{item.port}}
 {% endfor %}
+{% endif %}
+{% if firewall.nats is defined %}
+{% for item in firewall.nats %}
+-A POSTROUTING -s {{item.src}} -o {{item.dev}} -j MASQUERADE
+{% endfor %}
+{% endif %}
 COMMIT
-
 

@@ -16,7 +16,7 @@
   notify:
     - reload ufw
 
-- name: Copy port forwarding rules
+- name: Copy port nat rules
   template:
     src: "{{item}}.j2"
     dest: "/etc/ufw/{{item}}"
@@ -24,7 +24,7 @@
     - nat4
     - nat6
 
-- name: Register port forwarding rules
+- name: Register port nat rules
   shell: "cat /etc/ufw/{{item.snippet}}"
   register: nat
   with_items:
@@ -36,7 +36,7 @@
 #- name: Debug
 #  debug: var=nat.results
 
-- name: Put port forwarding rules into before.rules
+- name: Put nat rules into before.rules
   blockinfile:
     dest: /etc/ufw/{{item.item.rule}}.rules
     block: "{{item.stdout}}"
