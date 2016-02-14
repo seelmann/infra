@@ -1,0 +1,39 @@
+---
+
+- name: Create admin user
+  user:
+    name: "{{admin_user}}"
+    password: "{{admin_pass|password_hash('sha512')}}"
+    update_password: on_create
+    groups: sudo
+    shell: /bin/bash
+    createhome: yes
+    state: present
+
+- name: Set authorized key
+  authorized_key:
+    user: "{{admin_user}}"
+    key: "{{authorized_key}}"
+    state: present
+
+- name: Disallow password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify: Restart ssh
+
+- name: Disallow root login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: PermitRootLogin no"
+    state: present
+  notify: Restart ssh
+
+- name: Delete root password
+  shell: "passwd -d root"
+  changed_when: False
+
+
