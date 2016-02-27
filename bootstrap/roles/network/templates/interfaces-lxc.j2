@@ -8,6 +8,9 @@ iface eth0 inet static
   address     {{ipv4_address}}
   netmask     {{ipv4_netmask}}
   gateway     {{ipv4_gateway}}
+{% if ipv4_netmask == '255.255.255.255' %}
+  pointopoint {{ipv4_gateway}}
+{% endif %}
 
 iface eth0 inet6 static
   address {{ipv6_address}}
