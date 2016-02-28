@@ -1,31 +1,52 @@
+Infra
+=====
 
-Configure `hosts` inventory file
+Configure `inventory` inventory file.
 
-Configure `group_vars/all/secret.yml` variables file
+Configure `host_vars/*` host variables files.
 
-Run ad-hoc command
+Configure `group_vars/all/secret.yml` group variables file.
+
+
+## Run ad-hoc commands
 
     ansible -m ping hostname
     ansible -m setup hostname
     ansible -m debug -a var=hostvars hostname
 
-Run the playbook
 
-    ansible-playbook -i hosts l0kvmhosts.yml
-    ansible-playbook -i hosts l1kvmhosts.yml
-    ansible-playbook -i hosts upgrade.yml --limit develop1
+## Run playbooks
+
+    alias ap=ansible-playbook
+    ap plays/upgrade.yml
+    ap plays/reboot-all.yml
+    ap plays/open-luks.yml
+    ap plays/start-vms.yml
 
 
 ## Install Root Server
 
-TODO
+    ap bootstrap/hetzner-install-rootserver.yml --limit hostname
+    ap bootstrap/kvm-hosts.yml --limit hostname
+
 
 ## Install VM
 
-    ansible-playbook -i hosts vms.yml --limit demo2
+    ap bootstrap/kvm-install-guest.yml --limit hostname
+    ap bootstrap/lxc-hosts.yml --limit hostname
+
 
 ## Destroy VM
 
-    ansible-playbook -i hosts destroyvm.yml --extra-vars "target=demo2"
+    ap bootstrap/kvm-delete-guest.yml --limit hostname
 
+
+## Install LXC
+
+    ap bootstrap/lxc-install-guest/yml --limit hostname
+
+
+## Destroy LXC
+
+    ap bootstrap/lxc-delete-guest/yml --limit hostname
 

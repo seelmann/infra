@@ -22,3 +22,6 @@
 # 3rd reboot into new system
 - include: hetzner-reboot.yml
 
+# 4th configure vserver
+- include: hetzner-configure.yml
+

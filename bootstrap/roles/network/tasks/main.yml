@@ -4,7 +4,7 @@
   apt: name={{item}} state=present
   with_items:
     - bridge-utils
-  when: bridge_device is defined
+  when: network.bridge.device is defined
 
 - name: Copy /etc/resolv.conf
   template: src=resolv.j2 dest=/etc/resolv.conf
@@ -28,25 +28,29 @@
     - Restart networking
 
 - name: Check if bridge exists
-  shell: brctl show | grep {{bridge_device}}
+  shell: brctl show | grep {{network.bridge.device}}
   register: brctl_show_result
   failed_when: brctl_show_result.rc != 0 and brctl_show_result.rc != 1
   changed_when: brctl_show_result.rc != 0
-  when: bridge_device is defined
+  when: network.bridge.device is defined
 
 - name: Setup bridge
-  shell: brctl addbr {{bridge_device}}
-  when: bridge_device is defined and brctl_show_result.rc != 0
+  shell: brctl addbr {{network.bridge.device}}
+  when: network.bridge.device is defined and brctl_show_result.rc != 0
   notify:
     - Restart networking
 
 - name: Enable IPv6 forwarding
   sysctl: name="net.ipv6.conf.all.forwarding" value=1 sysctl_set=yes
-  when: bridge_device is defined
+  when: network.bridge.device is defined
 
 - name: Enable IPv4 forwarding
   sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes
-  when: bridge_device is defined
+  when: network.bridge.device is defined
+
+- name: Disable send redirects
+  sysctl: name="net.ipv4.conf.all.send_redirects" value=0 sysctl_set=yes
+  when: network.bridge.device is defined
 
 - name: Set Hostname
   hostname: name="{{inventory_hostname}}"
@@ -60,8 +64,8 @@
     line: "{{item}} {{inventory_hostname}}.{{network.domain}} {{inventory_hostname}}"
     state: present
   with_items:
-    - "{{ipv4_address}}"
-    - "{{ipv6_address}}"
+    - "{{network.ipv4.address}}"
+    - "{{network.ipv6.address}}"
   notify:
     - Restart hostname
 

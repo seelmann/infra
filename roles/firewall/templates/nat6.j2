@@ -1,9 +1,9 @@
 *nat
 :PREROUTING ACCEPT [0:0]
 -F
-{% if firewall.forwardings is defined %}
-{% for item in firewall.forwardings %}
--A PREROUTING -p tcp -i br0 --dst {{ipv6_address}} --dport {{item.port}} -j DNAT --to [{{hostvars[item.to]['ipv6_address']}}]:{{item.port}}
+{% if firewall.dnats is defined %}
+{% for item in firewall.dnats %}
+-A PREROUTING -p tcp -i br0 --dst {{network.ipv6.address}} --dport {{item.port}} -j DNAT --to [{{hostvars[item.to]['network.ipv6.address']}}]:{{item.port}}
 {% endfor %}
 {% endif %}
 COMMIT

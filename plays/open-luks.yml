@@ -1,0 +1,8 @@
+---
+
+- hosts: rootservers
+  gather_facts: False
+  roles: 
+    - role: assert-single-host
+    - role: open-luks
+

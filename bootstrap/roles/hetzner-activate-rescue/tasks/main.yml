@@ -2,7 +2,7 @@
 
 - name: Check rescue status for Hetzner server
   uri:
-    url: "https://robot-ws.your-server.de/boot/{{ipv4_address}}/rescue"
+    url: "https://robot-ws.your-server.de/boot/{{network.ipv4.address}}/rescue"
     method: GET
     user: "{{hetzner_user}}"
     password: "{{hetzner_pass}}"
@@ -19,7 +19,7 @@
 
 - name: Activate rescue system for Hetzner server
   uri:
-    url: "https://robot-ws.your-server.de/boot/{{ipv4_address}}/rescue"
+    url: "https://robot-ws.your-server.de/boot/{{network.ipv4.address}}/rescue"
     method: POST
     user: "{{hetzner_user}}"
     password: "{{hetzner_pass}}"

@@ -1,22 +1,14 @@
 ---
 
-- name: Allow forward
-  lineinfile:
-    dest: /etc/default/ufw
-    regexp: "^DEFAULT_FORWARD_POLICY="
-    line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
-  notify:
-    - reload ufw
-
 - name: Manage builtins
   lineinfile:
     dest: /etc/default/ufw
     regexp: "^MANAGE_BUILTINS="
     line: "MANAGE_BUILTINS=yes"
   notify:
-    - reload ufw
+    - Reload ufw
 
-- name: Copy port nat rules
+- name: Copy nat rules
   template:
     src: "{{item}}.j2"
     dest: "/etc/ufw/{{item}}"
@@ -24,7 +16,7 @@
     - nat4
     - nat6
 
-- name: Register port nat rules
+- name: Register nat rules
   shell: "cat /etc/ufw/{{item.snippet}}"
   register: nat
   with_items:
@@ -43,5 +35,5 @@
     insertbefore: "# Don't delete these required lines"
   with_items: "{{nat.results}}"
   notify:
-    - reload ufw
+    - Reload ufw
 

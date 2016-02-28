@@ -25,12 +25,12 @@
   delegate_to: "{{hypervisor}}"
 
 - name: Wipe volume
-  command: shred -z -n 0 /dev/mapper/{{hostvars[hypervisor]['crypt_vg']}}-{{inventory_hostname}}
+  command: shred -z -n 0 /dev/mapper/{{hostvars[hypervisor]['crypt']['vg']}}-{{inventory_hostname}}
   delegate_to: "{{hypervisor}}"
 
 - name: Delete volume
   #command: virsh vol-delete --pool vg0 {{inventory_hostname}}.img
   #lvol: vg=vg0 lv={{inventory_hostname}} state=absent
-  command: lvremove /dev/mapper/{{hostvars[hypervisor]['crypt_vg']}}-{{inventory_hostname}} -f
+  command: lvremove /dev/mapper/{{hostvars[hypervisor]['crypt']['vg']}}-{{inventory_hostname}} -f
   delegate_to: "{{hypervisor}}"
 

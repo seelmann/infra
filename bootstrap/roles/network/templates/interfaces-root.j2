@@ -5,31 +5,31 @@ iface lo inet loopback
 # device: eth0
 auto eth0
 iface eth0 inet static
-  address     {{ipv4_address}}
-  netmask     {{ipv4_netmask}}
-  gateway     {{ipv4_gateway}}
-  pointopoint {{ipv4_gateway}}
+  address     {{network.ipv4.address}}
+  netmask     {{network.ipv4.netmask}}
+  gateway     {{network.ipv4.gateway}}
+  pointopoint {{network.ipv4.gateway}}
 
 iface eth0 inet6 static
-  address {{ipv6_address}}
-  netmask {{ipv6_netmask}}
-  gateway {{ipv6_gateway}}
+  address {{network.ipv6.address}}
+  netmask {{network.ipv6.netmask}}
+  gateway {{network.ipv6.gateway}}
 
 # device: br0
-auto br0
-iface br0 inet static
-  address        {{nat_address}}
-  netmask        {{nat_netmask}}
+auto {{network.bridge.device}}
+iface {{network.bridge.device}} inet static
+  address        {{network.ipv4.address}}
+  netmask        255.255.255.255
   bridge_stp     off
   bridge_ports   none
   bridge_fd      0
   bridge_maxwait 0
-{% for additional_ip in ipv4_additional_ips %}
-  up route add -host {{additional_ip}} dev br0
-  down route del -host {{additional_ip}} dev br0
+{% for additional_ip in network.bridge.additional_ips %}
+  up route add -host {{additional_ip}} dev {{network.bridge.device}}
+  down route del -host {{additional_ip}} dev {{network.bridge.device}}
 {% endfor %}
 
-iface br0 inet6 static
-  address {{ipv6_address}}
+iface {{network.bridge.device}} inet6 static
+  address {{network.ipv6.address}}
   netmask 64
 

@@ -8,5 +8,5 @@
     proto: tcp
   with_items: "{{firewall.rules}}"
   notify:
-    - reload ufw
+    - Reload ufw
 

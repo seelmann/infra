@@ -2,13 +2,13 @@
 :PREROUTING ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 -F
-{% if firewall.forwardings is defined %}
-{% for item in firewall.forwardings %}
--A PREROUTING -p tcp --dst {{ipv4_address}} --dport {{item.port}} -j DNAT --to {{hostvars[item.to]['ipv4_address']}}:{{item.port}}
+{% if firewall.dnats is defined %}
+{% for item in firewall.dnats %}
+-A PREROUTING -p tcp --dst {{network.ipv4.address}} --dport {{item.port}} -j DNAT --to {{hostvars[item.to]['network.ipv4.address']}}:{{item.port}}
 {% endfor %}
 {% endif %}
-{% if firewall.nats is defined %}
-{% for item in firewall.nats %}
+{% if firewall.masqs is defined %}
+{% for item in firewall.masqs %}
 -A POSTROUTING -s {{item.src}} -o {{item.dev}} -j MASQUERADE
 {% endfor %}
 {% endif %}

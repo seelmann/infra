@@ -2,6 +2,5 @@
 - hosts: all
   gather_facts: False
   roles:
-    #- role: assert-single-host
     - { role: ssh-tools, down: False, clean: False, up: True }
 

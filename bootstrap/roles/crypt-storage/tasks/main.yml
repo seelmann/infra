@@ -13,13 +13,13 @@
   when: crypt_dev_vg is defined and crypt_dev_lv is defined
 
 - name: Check if LUKS device already exists
-  shell: cryptsetup -v isLuks {{crypt_dev}} | grep "successful"
+  shell: cryptsetup -v isLuks {{crypt.dev}} | grep "successful"
   register: is_luks_result
   failed_when: is_luks_result.rc != 0 and is_luks_result.rc != 1
   changed_when: is_luks_result.rc != 0
   
 #- name: Shred LUKS device
-#  command: shred -z -v {{crypt_dev}}
+#  command: shred -n1 -z -v {{crypt.dev}}
 #  when: is_luks_result.rc == 1
 #  async: 3600
 #  poll: 30
@@ -29,7 +29,7 @@
   when: is_luks_result.rc == 1
 
 - name: Create LUKS device
-  shell: cat /root/.luks_pass_tmp | cryptsetup -q -c aes-xts-plain -s 512 luksFormat {{crypt_dev}}
+  shell: cat /root/.luks_pass_tmp | cryptsetup -q -c aes-xts-plain -s 512 luksFormat {{crypt.dev}}
   when: is_luks_result.rc == 1
 
 - name: Delete passphrase
@@ -37,7 +37,7 @@
   when: is_luks_result.rc == 1
 
 - name: Check if LUKS device is already opened
-  shell: cryptsetup status {{crypt_name}} | grep "is active"
+  shell: cryptsetup status {{crypt.name}} | grep "is active"
   register: luks_open_result
   failed_when: luks_open_result.rc != 0 and luks_open_result.rc != 1
   changed_when: luks_open_result.rc != 0
@@ -47,7 +47,7 @@
   when: luks_open_result.rc == 1
 
 - name: Open LUKS device
-  shell: cat /root/.luks_pass_tmp | cryptsetup luksOpen {{crypt_dev}} {{crypt_name}}
+  shell: cat /root/.luks_pass_tmp | cryptsetup luksOpen {{crypt.dev}} {{crypt.name}}
   when: luks_open_result.rc == 1
 
 - name: Delete passphrase
@@ -55,5 +55,5 @@
   when: luks_open_result.rc == 1
 
 - name: Create crypted volumne group
-  lvg: vg={{crypt_vg}} pvs={{crypt_mapping}} state=present
+  lvg: vg={{crypt.vg}} pvs={{crypt.mapping}} state=present
 

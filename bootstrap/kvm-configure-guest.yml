@@ -6,4 +6,5 @@
     - role: assert-single-host
     - role: kvm-guest
     - role: network
+    - role: firewall
 

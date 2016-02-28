@@ -1,5 +1,5 @@
 ---
 
-- name: reload ufw
+- name: Reload ufw
   ufw: state=reloaded
 

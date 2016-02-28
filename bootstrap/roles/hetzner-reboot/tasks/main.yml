@@ -2,7 +2,7 @@
 
 - name: Reboot Hetzner server
   uri:
-    url: "https://robot-ws.your-server.de/reset/{{ipv4_address}}"
+    url: "https://robot-ws.your-server.de/reset/{{network.ipv4.address}}"
     method: POST
     user: "{{hetzner_user}}"
     password: "{{hetzner_pass}}"
