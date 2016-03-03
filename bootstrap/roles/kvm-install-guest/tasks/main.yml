@@ -12,6 +12,9 @@
   command: lvcreate -L {{vm.disk}}G -n {{inventory_hostname}} {{hostvars[hypervisor]['crypt']['vg']}}
   delegate_to: "{{hypervisor}}"
 
+- set_fact: additional_network_device="--network=bridge=brnat,model=virtio"
+  when: network.brnat is defined
+
 - name: Install VM
   command: >
     virt-install
@@ -22,7 +25,7 @@
     --os-type=linux
     --os-variant=debianwheezy
     --disk=path=/dev/mapper/{{hostvars[hypervisor]['crypt']['vg']}}-{{inventory_hostname}},bus=virtio
-    --network=bridge=br0,model=virtio
+    --network=bridge=br0,model=virtio {{additional_network_device|default("")}}
     --rng=type=random,device=/dev/random
     --location={{distro.installer}}
     --initrd-inject=/tmp/{{inventory_hostname}}/preseed.cfg

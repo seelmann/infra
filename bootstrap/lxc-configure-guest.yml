@@ -7,4 +7,5 @@
     - role: lxc-guest
     - role: network
     - role: firewall
+    - role: essential-packages
 

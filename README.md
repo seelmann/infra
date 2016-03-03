@@ -43,10 +43,10 @@ Configure `group_vars/all/secret.yml` group variables file.
 
 ## Install LXC
 
-    ap bootstrap/lxc-install-guest/yml --limit hostname
+    ap bootstrap/lxc-install-guest.yml --limit hostname
 
 
 ## Destroy LXC
 
-    ap bootstrap/lxc-delete-guest/yml --limit hostname
+    ap bootstrap/lxc-delete-guest.yml --limit hostname
 

@@ -14,7 +14,6 @@
     dest: "/etc/ufw/{{item}}"
   with_items:
     - nat4
-    - nat6
 
 - name: Register nat rules
   shell: "cat /etc/ufw/{{item.snippet}}"
@@ -22,8 +21,6 @@
   with_items:
     - rule: before
       snippet: nat4
-    - rule: before6
-      snippet: nat6
 
 #- name: Debug
 #  debug: var=nat.results

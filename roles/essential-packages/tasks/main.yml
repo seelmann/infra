@@ -1,0 +1,11 @@
+---
+
+- name: Install essential packages
+  apt: name={{item}} state=present
+  with_items:
+    - tree
+    - wget
+    - curl
+    - traceroute
+    - iputils-ping
+

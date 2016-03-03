@@ -15,10 +15,10 @@
   ufw: state=enabled
 
 - include: _forward.yml
-  when: firewall.forward or firewall.dnats is defined or firewall.masqs is defined
+  when: firewall.forward or firewall.nat is defined
 
 - include: _nats.yml
-  when: firewall.dnats is defined or firewall.masqs is defined
+  when: firewall.nat is defined
 
 - include: _rules.yml
   when: firewall.rules is defined
