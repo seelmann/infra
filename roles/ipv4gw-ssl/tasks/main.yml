@@ -8,26 +8,26 @@
     - ssl-cert
 
 - name: Slurp private key
-  slurp: src=/etc/ssl/private/{{hypervisor}}.key
+  slurp: src=/etc/ssl/private/{{fqdn}}.key
   register: ssl_key
-  delegate_to: "{{hypervisor}}"
+  delegate_to: "{{ipv4gw}}"
 
 - name: Write private key
   copy:
-    dest: /etc/ssl/private/{{inventory_hostname}}.key
+    dest: /etc/ssl/private/{{fqdn}}.key
     content: "{{ ssl_key.content | b64decode }}"
     mode: 0640
     owner: root
     group: ssl-cert
 
 - name: Slurp certificate
-  slurp: src=/etc/ssl/certs/{{hypervisor}}.crt
+  slurp: src=/etc/ssl/certs/{{fqdn}}.crt
   register: ssl_crt
-  delegate_to: "{{hypervisor}}"
+  delegate_to: "{{ipv4gw}}"
 
 - name: Write certificate
   copy:
-    dest: /etc/ssl/certs/{{inventory_hostname}}.crt
+    dest: /etc/ssl/certs/{{fqdn}}.crt
     content: "{{ ssl_crt.content | b64decode }}"
     mode: 0644
 

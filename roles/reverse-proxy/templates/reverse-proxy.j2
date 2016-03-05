@@ -33,7 +33,7 @@ ServerName localhost
     AuthType Basic
     AuthName "LDAP"
     AuthBasicProvider ldap
-    AuthLDAPURL "ldap://{{ldap.host}}:389/{{ldap.baseDN}}?uid?sub?(objectClass=inetOrgPerson)" STARTTLS
+    AuthLDAPURL "ldap://{{ldap.fqdn}}:389/{{ldap.baseDN}}?uid?sub?(objectClass=inetOrgPerson)" STARTTLS
 
 {% for item in reverse_proxy.noauths %}
     Require expr %{REQUEST_URI} in { '{{item.path}}' }

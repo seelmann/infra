@@ -1,9 +1,9 @@
 dn: cn=config
 replace: olcTLSCertificateFile
-olcTLSCertificateFile: /etc/ssl/certs/{{inventory_hostname}}.crt
+olcTLSCertificateFile: /etc/ssl/certs/{{fqdn}}.crt
 -
 replace: olcTLSCertificateKeyFile
-olcTLSCertificateKeyFile: /etc/ssl/private/{{inventory_hostname}}.key
+olcTLSCertificateKeyFile: /etc/ssl/private/{{fqdn}}.key
 
 dn: olcDatabase={1}mdb,cn=config
 changetype:  modify

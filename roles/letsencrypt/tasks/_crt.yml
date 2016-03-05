@@ -23,8 +23,7 @@
   copy: src=acme_tiny.py dest={{letsencrypt_work_dir}}
 
 - name: Run acme-tiny
-  shell: "cd {{letsencrypt_work_dir}} && python acme_tiny.py --account-key ./account.key --csr {{letsencrypt_csr_file}} --acme-dir {{letsencrypt_acme_dir}}/ > {{letsencrypt_crt_file}}
-"
+  shell: "cd {{letsencrypt_work_dir}} && python acme_tiny.py --account-key ./account.key --csr {{letsencrypt_csr_file}} --acme-dir {{letsencrypt_acme_dir}}/ > {{letsencrypt_crt_file}}"
 
 # View certificate:
 # openssl x509 -in domain.crt -noout -text

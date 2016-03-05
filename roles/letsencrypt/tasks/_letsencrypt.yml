@@ -1,0 +1,32 @@
+---
+
+- set_fact:
+    letsencrypt_domain: "{{item}}"
+    letsencrypt_work_dir: /tmp/letsencrypt/{{item}}
+    letsencrypt_webroot_dir: /tmp/letsencrypt/{{item}}/webroot
+    letsencrypt_acme_dir: /tmp/letsencrypt/{{item}}/webroot/.well-known/acme-challenge
+    letsencrypt_key_file: /etc/ssl/private/{{item}}.key
+    letsencrypt_csr_file: /etc/ssl/private/{{item}}.csr
+    letsencrypt_crt_file: /etc/ssl/certs/{{item}}.crt
+    
+- name: Install packages
+  apt: name={{item}} state=present
+  with_items:
+    - python
+    - openssl
+    - ca-certificates
+
+- name: Check certificate status
+  stat: path={{letsencrypt_crt_file}} 
+  register: crt
+
+- name: Private key
+  include: _key.yml
+
+- name: CSR
+  include: _csr.yml
+  
+- name: Certificate
+  include: _crt.yml
+  when: not crt.stat.exists or crt.stat.size == 0 or ansible_date_time.epoch|float - crt.stat.mtime > 60*60*24*45
+
