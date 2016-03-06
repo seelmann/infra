@@ -23,3 +23,5 @@
 - include: _rules.yml
   when: firewall.rules is defined
 
+- meta: flush_handlers
+

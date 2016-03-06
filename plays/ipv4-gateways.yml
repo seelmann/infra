@@ -1,0 +1,9 @@
+---
+
+- hosts: ipv4-gateways
+  roles:
+    - role: firewall
+    - role: letsencrypt
+    - role: reverse-proxy
+      when: reverse_proxy is defined
+

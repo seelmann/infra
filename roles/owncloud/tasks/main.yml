@@ -32,8 +32,9 @@
   changed_when: installed_result.rc == 1
 
 - name: Setup OwnCloud
-  shell: "{{occ}} maintenance:install --database 'mysql' --database-name 'owncloud'  --database-user 'root' --database-pass '{{mysql_password}}' --admin-user 'admin' --admin-pass '{{owncloud_password}}'"
+  shell: "{{occ}} maintenance:install --database 'mysql' --database-name 'owncloud'  --database-user 'root' --database-pass '{{mysql_password}}' --admin-user 'ocadmin' --admin-pass '{{owncloud_password}}'"
   when: installed_result.rc == 1
+
 
 - name: Copy reverse proxy config
   template:
@@ -46,6 +47,7 @@
 - name: Import reverse proxy config
   shell: "{{occ}} config:import /var/www/owncloud/config/reverseproxy.config.json"
   changed_when: False
+
 
 - name: Enable LDAP
   shell: "{{occ}} app:enable user_ldap"
@@ -73,6 +75,4 @@
 - name: Import LDAP config
   shell: "{{occ}} config:import /var/www/owncloud/config/ldap.config.json"
   changed_when: False
-
-
 

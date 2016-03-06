@@ -1,0 +1,42 @@
+---
+
+- name: Install packages
+  apt: name={{item}} state=present
+  with_items:
+    - openssl
+    - ca-certificates
+    - apache2
+
+- name: Disable default site
+  shell: a2dissite 000-default | grep "already disabled"
+  register: disable_result
+  failed_when: disable_result.rc != 0 and disable_result.rc != 1
+  changed_when: disable_result.rc != 0
+  notify:
+    - Restart apache2
+
+- name: Enable modules
+  apache2_module: name={{item}} state=present
+  notify:
+    - Restart apache2
+  with_items:
+    - ssl
+    - authnz_ldap
+    - remoteip
+    - log_forensic
+
+- name: Copy Apache site config
+  template:
+    src: site.j2
+    dest: /etc/apache2/sites-available/{{fqdn}}.conf
+  notify:
+    - Restart apache2
+
+- name: Enable Apache site
+  shell: a2ensite {{fqdn}} | grep "already enabled"
+  register: enable_rp_result
+  failed_when: enable_rp_result.rc != 0 and enable_rp_result.rc != 1
+  changed_when: enable_rp_result.rc != 0
+  notify:
+    - Restart apache2
+

@@ -5,50 +5,27 @@
   with_items:
     - openssl
     - ca-certificates
-    - apache2
+    - nginx
 
 - name: Disable default site
-  shell: a2dissite 000-default | grep "already disabled"
-  register: disable_result
-  failed_when: disable_result.rc != 0 and disable_result.rc != 1
-  changed_when: disable_result.rc != 0
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
   notify:
-    - Restart apache2
-
-- name: Disable port 80
-  lineinfile:
-    dest: /etc/apache2/ports.conf
-    regexp: "Listen 80"
-    line: "#Listen 80"
-    state: present
-  notify:
-    - Restart apache2
-
-- name: Enable modules
-  # a2enmod ssl
-  apache2_module: name={{item}} state=present
-  notify:
-    - Restart apache2
-  with_items:
-    - ssl
-    - authnz_ldap
-    - proxy
-    - proxy_http
-    - headers
+    - Restart nginx
 
 - name: Copy reverse proxy config
   template:
     src: reverse-proxy.j2
-    dest: /etc/apache2/sites-available/reverse-proxy.conf
+    dest: /etc/nginx/sites-available/reverse-proxy.conf
   notify:
-    - Restart apache2
+    - Restart nginx
 
 - name: Enable reverse proxy site
-  shell: a2ensite reverse-proxy | grep "already enabled"
-  register: enable_rp_result
-  failed_when: enable_rp_result.rc != 0 and enable_rp_result.rc != 1
-  changed_when: enable_rp_result.rc != 0
+  file:
+    src: /etc/nginx/sites-available/reverse-proxy.conf
+    dest: /etc/nginx/sites-enabled/reverse-proxy.conf
+    state: link
   notify:
-    - Restart apache2
-
+    - Restart nginx
 

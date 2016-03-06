@@ -1,0 +1,8 @@
+---
+
+- hosts: ldap-servers
+  roles:
+    - role: firewall
+    - role: ipv4gw-ssl
+    - role: slapd
+

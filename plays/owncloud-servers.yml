@@ -1,0 +1,9 @@
+---
+
+- hosts: owncloud-servers
+  roles:
+    - role: firewall
+    - role: ipv4gw-ssl
+    - role: owncloud
+    - role: apache-ssl-ldap
+
