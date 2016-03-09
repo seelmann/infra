@@ -1,0 +1,11 @@
+---
+
+- name: Copy /etc/apt/sources.list
+  copy: src=sources.list dest=/etc/apt/sources.list
+
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Upgrade packages
+  apt: upgrade=dist
+

@@ -14,6 +14,6 @@
     - role: assert-single-host
     - { role: ssh-tools, down: True, clean: False, up: True }
 
-#- include: open-luks.yml
-#- include: start-vms.yml
+- include: open-luks.yml
+- include: start-vms.yml
 
