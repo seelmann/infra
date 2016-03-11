@@ -4,7 +4,17 @@
   copy: src=sources.list dest=/etc/apt/sources.list
 
 - name: Update apt cache
-  apt: update_cache=yes cache_valid_time=86400
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Get packages to upgrade
+  shell: apt-get -s dist-upgrade | awk '/^Inst/ { print $2 }' warn=no
+  register: upgrades
+  changed_when: False
+
+- name: List packages to upgrade
+  debug:
+    msg: "{{ upgrades.stdout_lines | count }} packages to upgrade ({{ upgrades.stdout_lines | join(', ') }})"
+  when: upgrades.stdout_lines
 
 - name: Upgrade packages
   apt: upgrade=dist
