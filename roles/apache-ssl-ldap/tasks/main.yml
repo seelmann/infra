@@ -24,6 +24,8 @@
     - authnz_ldap
     - remoteip
     - log_forensic
+    - proxy
+    - proxy_http
 
 - name: Copy Apache site config
   template:

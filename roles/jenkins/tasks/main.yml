@@ -1,0 +1,60 @@
+---
+
+- name: Add Jenkins apt repository key
+  apt_key:
+    url: http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
+    state: present
+
+- name: Add Jenkins apt repository
+  apt_repository:
+    repo: deb http://pkg.jenkins-ci.org/debian binary/ 
+    state: present
+    update_cache: yes
+
+- name: Install Jenkins
+  apt: name={{item}} state=present
+  with_items:
+    - curl
+    - jenkins
+
+- name: Copy config
+  copy:
+    src: "{{item}}"
+    dest: /var/lib/jenkins/{{item}}
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+  with_items:
+    - config.xml
+    - hudson.tasks.Maven.xml
+  notify: Restart jenkins
+
+- name: Create seed job directory
+  file:
+    path: /var/lib/jenkins/jobs/seed 
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  notify: Restart jenkins
+
+- name: Copy seed job
+  copy:
+    src: seed.xml
+    dest: /var/lib/jenkins/jobs/seed/config.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+  notify: Restart jenkins
+
+- name: Download jenkins-cli.jar
+  get_url:
+    url: http://localhost:8080/jnlpJars/jenkins-cli.jar
+    dest: /tmp/jenkins-cli.jar
+
+- name: Install Jenkins plugins
+  shell: java -jar /tmp/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
+    creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+  with_items: "{{jenkins.plugins}}"
+  notify: Restart jenkins
+

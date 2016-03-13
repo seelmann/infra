@@ -1,9 +1,17 @@
 ---
 
 - hosts: ipv4-gateways
+  pre_tasks:
+    - name: Stop nginx
+      service: name=nginx state=stopped
+      when: reverse_proxy is defined
   roles:
     - role: firewall
     - role: letsencrypt
     - role: reverse-proxy
+      when: reverse_proxy is defined
+  post_tasks:
+    - name: Start nginx
+      service: name=nginx state=started
       when: reverse_proxy is defined
 

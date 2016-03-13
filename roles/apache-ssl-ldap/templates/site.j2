@@ -20,9 +20,11 @@
   SSlCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA;
   SSLHonorCipherOrder on
 
+{% if apache.redirects is defined %}
 {% for item in apache.redirects %}
   Redirect {{item.status}} {{item.path}} {{item.url}}
 {% endfor %}
+{% endif %}
 
   <Location />
     SSLRequireSSL
@@ -32,10 +34,17 @@
     AuthBasicProvider ldap
     AuthLDAPURL "ldap://{{ldap.fqdn}}:389/{{ldap.baseDN}}?uid?sub?(objectClass=inetOrgPerson)" STARTTLS
 
+{% if apache.noauths is defined %}
 {% for item in apache.noauths %}
     Require expr %{REQUEST_URI} in { '{{item.path}}' }
 {% endfor %}
+{% endif %}
     Require valid-user
+
+{% if apache.pass_to_port is defined %}
+    ProxyPass http://localhost:{{apache.pass_to_port}}/
+    ProxyPassReverse http://localhost:{{apache.pass_to_port}}/
+{% endif %}
   </Location>
 
 </VirtualHost>
