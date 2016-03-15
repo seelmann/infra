@@ -14,3 +14,18 @@
   notify:
     - Restart rsyslog
 
+- name: Disable gettys
+  service:
+    name: "{{item}}"
+    state: stopped
+    enabled: no
+  with_items:
+    - getty@tty5
+    - getty@tty6
+
+- name: Remove DHCP client
+  apt: name={{item}} state=absent purge=yes
+  with_items:
+    - isc-dhcp-client
+    - isc-dhcp-common
+
