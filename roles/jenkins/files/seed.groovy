@@ -36,8 +36,14 @@ job('directory-studio-generated') {
         }
     }
     steps {
-        maven('-V -f pom-first.xml clean install')
-        maven('-V -Denable-ui-tests -pl !product clean install')
+        maven {
+            goals('-V -f pom-first.xml clean install')
+            mavenInstallation('Maven')
+        }
+        maven {
+            goals('-V -Denable-ui-tests -pl !product clean install')
+            mavenInstallation('Maven')
+        }
     }
     publishers {
         wsCleanup {
@@ -74,7 +80,7 @@ mavenJob('directory-kerby-generated') {
 mavenJob('directory-fortress-core-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-fortress-core', 'trunk')
+        github('apache/directory-fortress-core', 'master')
     }
     triggers {
         cron('@daily')
@@ -86,7 +92,7 @@ mavenJob('directory-fortress-core-generated') {
 mavenJob('directory-fortress-realm-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-fortress-realm', 'trunk')
+        github('apache/directory-fortress-realm', 'master')
     }
     triggers {
         cron('@daily')
@@ -98,7 +104,7 @@ mavenJob('directory-fortress-realm-generated') {
 mavenJob('directory-fortress-rest-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-fortress-enmasse', 'trunk')
+        github('apache/directory-fortress-enmasse', 'master')
     }
     triggers {
         cron('@daily')
@@ -110,7 +116,7 @@ mavenJob('directory-fortress-rest-generated') {
 mavenJob('directory-fortress-web-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-fortress-commander', 'trunk')
+        github('apache/directory-fortress-commander', 'master')
     }
     triggers {
         cron('@daily')
