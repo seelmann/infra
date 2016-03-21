@@ -11,11 +11,13 @@
     state: present
     update_cache: yes
 
-- name: Install Jenkins
+- name: Install Jenkins and Tools
   apt: name={{item}} state=present
   with_items:
     - curl
     - jenkins
+    - xvfb
+    - iceweasel
 
 - name: Copy config
   copy:
@@ -27,6 +29,7 @@
   with_items:
     - config.xml
     - hudson.tasks.Maven.xml
+    - org.jenkinsci.plugins.xvfb.Xvfb.xml
   notify: Restart jenkins
 
 - name: Create seed job directory
@@ -55,6 +58,21 @@
 - name: Install Jenkins plugins
   shell: java -jar /tmp/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
     creates=/var/lib/jenkins/plugins/{{ item }}.jpi
-  with_items: "{{jenkins.plugins}}"
+  #with_items: "{{jenkins.plugins}}"
+  with_items:
+    - subversion
+    - git
+    - github
+    - git-client
+    - scm-api
+    - job-dsl
+    - xvfb
+    - ws-cleanup
   notify: Restart jenkins
+
+- name: Enable tmpfs
+  service:
+    name: tmp.mount
+    enabled: yes
+    state: started
 
