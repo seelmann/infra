@@ -1,0 +1,28 @@
+---
+
+- name: Add backports
+  apt_repository:
+    repo: "deb http://http.debian.net/debian jessie-backports main contrib non-free"
+    state: present
+    update_cache: yes
+
+- name: Install OpenJDK 8 JRE
+  apt:
+    name: openjdk-8-jre
+    state: present
+
+- name: Download workshop registration deb
+  get_url:
+    url: https://github.com/cko/workshop-registration/releases/download/v1.0/workshop-registration_1.0_all.deb
+    dest: /tmp/workshop-registration.deb
+
+#- name: Copy workshop registration deb
+#  copy:
+#    src: /path/to/workshop-registration_1.0_all.deb
+#    dest: /tmp/workshop-registration.deb
+
+- name: Install workshop registration deb
+  apt:    
+    deb: /tmp/workshop-registration.deb
+    state: present
+
