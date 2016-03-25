@@ -37,3 +37,7 @@
 - name: Delete working dir
   file: path={{letsencrypt_work_dir}} state=absent
 
+- name: Kill Simple HTTP server
+  shell: pkill -f "python -m SimpleHTTPServer 80"
+  failed_when: False
+

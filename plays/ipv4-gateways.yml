@@ -5,6 +5,7 @@
     - name: Stop nginx
       service: name=nginx state=stopped
       when: reverse_proxy is defined
+      ignore_errors: yes
   roles:
     - role: firewall
     - role: letsencrypt

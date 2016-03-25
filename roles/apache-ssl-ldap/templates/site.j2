@@ -36,7 +36,7 @@
 
 {% if apache.noauths is defined %}
 {% for item in apache.noauths %}
-    Require expr %{REQUEST_URI} in { '{{item.path}}' }
+    Require expr %{REQUEST_URI} =~ m#{{item.path}}#
 {% endfor %}
 {% endif %}
     Require valid-user
