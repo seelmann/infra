@@ -1,0 +1,94 @@
+---
+
+- name: Install packages
+  apt: name={{item}} state=present
+  with_items:
+    - python
+    - python-pip
+    - python-virtualenv
+    - python-psycopg2
+    - python-dev
+    - python-setuptools
+    - postgresql
+    - postgresql-client
+    - libpq-dev
+    - apache2
+    - libapache2-mod-wsgi
+    - git
+    - libtiff5-dev
+    - libjpeg-dev
+    - zlib1g-dev
+
+- name: Enable Apache modules
+  apache2_module: name={{item}} state=present
+  notify:
+    - Restart apache2
+  with_items:
+    - rewrite
+    - proxy
+    - proxy_http
+    - ssl
+    - expires
+    - headers
+
+- name: Create techism user
+  user:
+    name: techism
+    group: www-data
+
+- name: Create techism www folder
+  file:
+    path: /var/www/techism
+    state: directory
+    mode: 0755
+    owner: techism
+    group: www-data
+
+- name: Create techism log folder
+  file:
+    path: /var/log/techism
+    state: directory
+    mode: 0755
+    owner: techism
+    group: www-data
+
+- name: Create techism pip cache folder
+  file:
+    path: /var/cache/techism/pip
+    state: directory
+    mode: 0755
+    owner: techism
+    group: www-data
+
+#- name: Create techism folder
+#  file:
+#    path: /var/www/techism/static-collected
+#    state: directory
+#    mode: 0755
+#    owner: techism
+#    group: www-data
+
+- name: Copy techism conf
+  copy:
+    src: techism.conf
+    dest: /etc/apache2/conf-enabled/techism.conf
+  notify:
+    - Restart apache2
+
+- name: Create PostgreSQL user
+  become_user: postgres
+  postgresql_user:
+    name: techism
+    role_attr_flags: LOGIN,CREATEDB,NOCREATEROLE,NOSUPERUSER
+
+- name: Create PostgreSQL database
+  become_user: postgres
+  postgresql_db:
+    name: techism
+    template: template0
+    owner: techism
+    encoding: UTF-8
+
+- name: Deploy
+  include: _deploy.yml
+
