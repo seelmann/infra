@@ -29,10 +29,10 @@
 # openssl x509 -in domain.crt -noout -text
 
 - name: Download intermediate certificate
-  get_url: url=https://letsencrypt.org/certs/lets-encrypt-x1-cross-signed.pem dest=/etc/ssl/certs/
+  get_url: url=https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem dest=/etc/ssl/certs/
 
 - name: Append intermediate certificate
-  shell: cat /etc/ssl/certs//lets-encrypt-x1-cross-signed.pem >> {{letsencrypt_crt_file}}
+  shell: cat /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem >> {{letsencrypt_crt_file}}
 
 - name: Delete working dir
   file: path={{letsencrypt_work_dir}} state=absent
