@@ -5,6 +5,7 @@
 
 - name: Update apt cache
   apt: update_cache=yes cache_valid_time=3600
+  #shell: apt-get update
 
 - name: Get packages to upgrade
   shell: apt-get -s dist-upgrade | awk '/^Inst/ { print $2 }' warn=no
