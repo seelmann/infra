@@ -8,4 +8,5 @@
     - curl
     - traceroute
     - iputils-ping
+    - libpam-systemd
 
