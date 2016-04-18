@@ -22,6 +22,14 @@
     - { q: mysql-server/root_password_again, v: "{{mysql_password}}", t: password }
   changed_when: False
 
+- name: Allow root access to MySQL
+  template:
+    src: root.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+
 - name: Install OwnCloud
   apt: name=owncloud
 

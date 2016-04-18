@@ -1,0 +1,26 @@
+---
+
+- name: Install rsnapshot
+  apt:
+    package: rsnapshot
+    state: present
+
+- name: Copy rsnaphost config
+  template:
+    src: rsnapshot.conf.j2
+    dest: /etc/rsnapshot.conf
+
+- name: Copy rsnapshot cron
+  copy:
+    src: rsnapshot.cron
+    dest: /etc/cron.d/rsnapshot
+
+- name: Test rsnapshot config
+  shell: rsnapshot configtest
+
+- name: Test rsnapshot daily
+  shell: rsnapshot -t daily
+
+- name: Run rsnapshot daily
+  shell: rsnapshot daily
+

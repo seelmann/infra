@@ -6,4 +6,5 @@
     - role: ipv4gw-ssl
     - role: owncloud
     - role: apache-ssl-ldap
+    - role: backup
 

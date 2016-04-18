@@ -5,4 +5,5 @@
     - role: firewall
     - role: ipv4gw-ssl
     - role: slapd
+    - role: backup
 

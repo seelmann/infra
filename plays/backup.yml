@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - role: assert-single-host
+    - role: backup
+
