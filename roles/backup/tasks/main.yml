@@ -21,6 +21,6 @@
 - name: Test rsnapshot daily
   shell: rsnapshot -t daily
 
-- name: Run rsnapshot daily
-  shell: rsnapshot daily
+#- name: Run rsnapshot daily
+#  shell: rsnapshot daily
 
