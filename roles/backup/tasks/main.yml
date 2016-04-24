@@ -24,3 +24,11 @@
 #- name: Run rsnapshot daily
 #  shell: rsnapshot daily
 
+- name: Allow rsync
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^{{admin_user}} ALL\='
+    line: '{{admin_user}} ALL= NOPASSWD:/usr/bin/rsync'
+    validate: 'visudo -cf %s'
+
