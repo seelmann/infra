@@ -1,5 +1,5 @@
 ---
-- hosts: neelix
+- hosts: techism
   roles:
     - role: firewall
     - role: ipv4gw-ssl

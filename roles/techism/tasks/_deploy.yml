@@ -56,4 +56,14 @@
     virtualenv: /var/www/techism/venv
     settings: techism.settings.server
 
+- name: Touch WSGI
+  become_user: techism
+  file:
+    path: /var/www/techism/techism/settings/server_wsgi.py
+    state: touch
+
+- name: Enable crontab
+  become_user: techism
+  shell: "crontab < /var/www/techism/conf/crontab"
+  when: fqdn == "www.techism.de"
 

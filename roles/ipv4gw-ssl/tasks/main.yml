@@ -7,27 +7,37 @@
     - ca-certificates
     - ssl-cert
 
+- name: Set fqdns
+  set_fact:
+    fqdns: "{{ [fqdn] + fqdn_aliases|default([]) }}"
+
 - name: Slurp private key
-  slurp: src=/etc/ssl/private/{{fqdn}}.key
+  slurp: src=/etc/ssl/private/{{item}}.key
   register: ssl_key
   delegate_to: "{{ipv4gw}}"
+  with_items: "{{fqdns}}"
 
 - name: Write private key
   copy:
-    dest: /etc/ssl/private/{{fqdn}}.key
-    content: "{{ ssl_key.content | b64decode }}"
+    dest: /etc/ssl/private/{{item.item}}.key
+    content: "{{ item.content | b64decode }}"
     mode: 0640
     owner: root
     group: ssl-cert
+  no_log: True
+  with_items: "{{ssl_key.results}}"
 
 - name: Slurp certificate
-  slurp: src=/etc/ssl/certs/{{fqdn}}.crt
+  slurp: src=/etc/ssl/certs/{{item}}.crt
   register: ssl_crt
   delegate_to: "{{ipv4gw}}"
+  with_items: "{{fqdns}}"
 
 - name: Write certificate
   copy:
-    dest: /etc/ssl/certs/{{fqdn}}.crt
-    content: "{{ ssl_crt.content | b64decode }}"
+    dest: /etc/ssl/certs/{{item.item}}.crt
+    content: "{{ item.content | b64decode }}"
     mode: 0644
+  no_log: True
+  with_items: "{{ssl_crt.results}}"
 

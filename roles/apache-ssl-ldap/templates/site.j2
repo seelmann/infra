@@ -67,3 +67,45 @@
   Redirect 302 / https://{{fqdn}}/
 </VirtualHost>
 
+{% if fqdn_aliases is defined %}
+{% for item in fqdn_aliases %}
+<VirtualHost *:443>
+  ServerName {{item}}
+
+  LogLevel info
+  LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined-remoteip
+  ErrorLog ${APACHE_LOG_DIR}/{{item}}.error.log
+  CustomLog ${APACHE_LOG_DIR}/{{item}}.access.log combined-remoteip
+  ForensicLog ${APACHE_LOG_DIR}/{{item}}.forensic.log
+
+  RemoteIPHeader X-Forwarded-For
+  RemoteIPInternalProxy {{hostvars[ipv4gw]['network']['ipv6']['address']}}
+
+  SSLEngine on
+  SSLCertificateFile /etc/ssl/certs/{{item}}.crt
+  SSLCertificateKeyFile /etc/ssl/private/{{item}}.key
+  SSLProtocol all -SSLv2 -SSLv3
+  SSlCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA;
+  SSLHonorCipherOrder on
+  #Header always set Strict-Transport-Security "max-age=31536000"
+
+  Redirect 302 / https://{{fqdn}}/
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerName {{item}}
+
+  LogLevel info
+  LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined-remoteip
+  ErrorLog ${APACHE_LOG_DIR}/{{item}}.error.log
+  CustomLog ${APACHE_LOG_DIR}/{{item}}.access.log combined-remoteip
+  ForensicLog ${APACHE_LOG_DIR}/{{item}}.forensic.log
+
+  RemoteIPHeader X-Forwarded-For
+  RemoteIPInternalProxy {{hostvars[ipv4gw]['network']['ipv6']['address']}}
+
+  Redirect 302 / https://{{fqdn}}/
+</VirtualHost>
+{% endfor %}
+{% endif %}
+
