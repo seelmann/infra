@@ -4,15 +4,18 @@
   pre_tasks:
     - name: Stop nginx
       service: name=nginx state=stopped
+      tags: letsencrypt
       when: reverse_proxy is defined
       ignore_errors: yes
   roles:
     - role: firewall
     - role: letsencrypt
+      tags: letsencrypt
     - role: reverse-proxy
       when: reverse_proxy is defined
   post_tasks:
     - name: Start nginx
       service: name=nginx state=started
       when: reverse_proxy is defined
+      tags: letsencrypt
 

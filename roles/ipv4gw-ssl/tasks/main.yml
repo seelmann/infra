@@ -41,3 +41,20 @@
   no_log: True
   with_items: "{{ssl_crt.results}}"
 
+- name: Register services
+  shell: "systemctl status {{item}}"
+  register: services
+  with_items:
+    - nginx
+    - apache2
+    - slapd
+  failed_when: False
+
+#- name: Debug
+#  debug: var=services.results
+
+- name: Restart services
+  service: name={{item.item}} state=restarted
+  with_items: "{{services.results}}"
+  when: item.rc == 0
+
