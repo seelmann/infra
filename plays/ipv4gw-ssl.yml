@@ -1,5 +1,10 @@
 ---
-- hosts: all
+- hosts:
+    - ldap-servers
+    - owncloud-servers
+    - jenkins-servers
+    - techism
+    - munin-masters
   roles:
     - role: ipv4gw-ssl
 
