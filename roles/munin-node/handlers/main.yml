@@ -1,0 +1,8 @@
+---
+
+- name: Restart munin-node
+  service: name=munin-node state=restarted
+
+- name: Reload ufw 
+  ufw: state=reloaded
+

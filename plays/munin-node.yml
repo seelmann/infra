@@ -1,0 +1,5 @@
+---
+- hosts: munin-nodes
+  roles:
+    - role: munin-node
+

@@ -1,0 +1,23 @@
+---
+
+- name: Install packages
+  apt: name={{item}} state=present
+  with_items:
+    - libcgi-fast-perl
+    - libapache2-mod-fcgid
+    - munin
+
+- name: Enable modules
+  apache2_module: name={{item}} state=present
+  notify:
+    - Restart apache2
+  with_items:
+    - fcgid
+
+- name: Copy munin config
+  template:
+    src: munin.conf.j2
+    dest: /etc/munin/munin.conf
+  notify:
+    - Restart munin-node
+
