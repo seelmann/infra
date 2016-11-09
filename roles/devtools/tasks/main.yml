@@ -3,3 +3,9 @@
 - include: packages.yml
 - include: java.yml
 
+- name: Enable tmpfs
+  service:
+    name: tmp.mount
+    enabled: yes
+    state: started
+

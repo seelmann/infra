@@ -12,4 +12,6 @@
     - htop
     - iotop
     - sysstat
+    - xvfb
+    - iceweasel
 
