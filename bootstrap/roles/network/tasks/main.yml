@@ -4,6 +4,7 @@
   apt: name={{item}} state=present
   with_items:
     - bridge-utils
+    - dbus
   when: network.br0 is defined
 
 - name: Copy /etc/resolv.conf
@@ -68,7 +69,7 @@
 - name: Set Hostname
   hostname: name="{{inventory_hostname}}"
   notify:
-    - Restart hostname
+    - Restart networking
 
 - name: Build /etc/hosts file
   lineinfile:
@@ -80,5 +81,5 @@
     - "{{network.ipv4.address}}"
     - "{{network.ipv6.address}}"
   notify:
-    - Restart hostname
+    - Restart networking
 
