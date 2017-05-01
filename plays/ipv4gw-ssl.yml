@@ -5,6 +5,7 @@
     - jenkins-servers
     - techism
     - munin-masters
+    - frab
   roles:
     - role: ipv4gw-ssl
 
