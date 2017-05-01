@@ -15,7 +15,7 @@
   ufw: state=enabled
 
 - include: _forward.yml
-  when: firewall.forward or firewall.nat is defined
+  when: firewall.forward is defined or firewall.nat is defined
 
 - include: _nats.yml
   when: firewall.nat is defined
