@@ -4,7 +4,6 @@
   apt: name={{item}} state=present
   with_items:
     - bridge-utils
-    - dbus
   when: network.br0 is defined
 
 - name: Copy /etc/resolv.conf
@@ -65,6 +64,11 @@
 - name: Disable send redirects
   sysctl: name="net.ipv4.conf.all.send_redirects" value=0 sysctl_set=yes
   when: network.br0 is defined
+
+- name: Install dependencies to set hostname
+  apt: name={{item}} state=present
+  with_items:
+    - dbus
 
 - name: Set Hostname
   hostname: name="{{inventory_hostname}}"
