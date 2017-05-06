@@ -43,6 +43,8 @@
     Require valid-user
 
 {% if apache.pass_to_port is defined %}
+    RequestHeader set X-Forwarded-Proto "https"
+    #ProxyPreserveHost On
     ProxyPass http://localhost:{{apache.pass_to_port}}/
     ProxyPassReverse http://localhost:{{apache.pass_to_port}}/
 {% endif %}

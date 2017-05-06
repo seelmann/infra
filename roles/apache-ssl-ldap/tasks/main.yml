@@ -26,6 +26,7 @@
     - log_forensic
     - proxy
     - proxy_http
+    - headers
 
 - name: Copy Apache site config
   template:
