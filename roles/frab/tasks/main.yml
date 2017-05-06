@@ -103,10 +103,10 @@
 - name: Checkout frab/frab
   become_user: frab
   git:
-    repo: "https://github.com/frab/frab.git"
+    repo: "https://github.com/cko/frab.git"
     dest: /var/www/frab
     update: no
-    version: "0f9e0c9b1ec343ff8f21c5b350c12e158a61391f"
+    version: "nixcon"
 
 - name: Build frab
   become_user: frab
