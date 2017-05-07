@@ -105,7 +105,8 @@
   git:
     repo: "https://github.com/cko/frab.git"
     dest: /var/www/frab
-    update: no
+    update: yes
+    force: yes
     version: "nixcon"
 
 - name: Build frab
