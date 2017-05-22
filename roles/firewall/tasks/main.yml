@@ -15,13 +15,13 @@
   ufw: state=enabled
 
 - include: _forward.yml
-  when: firewall.forward is defined or firewall.nat is defined
+  when: firewall is defined and ( firewall.forward is defined or firewall.nat is defined )
 
 - include: _nats.yml
-  when: firewall.nat is defined
+  when: firewall is defined and firewall.nat is defined
 
 - include: _rules.yml
-  when: firewall.rules is defined
+  when: firewall is defined and firewall.rules is defined
 
 - meta: flush_handlers
 
