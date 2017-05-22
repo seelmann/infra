@@ -50,6 +50,11 @@
 {% endif %}
   </Location>
 
+  <Location "/server-status">
+    Require local
+    ProxyPass "!"
+  </Location>
+
 </VirtualHost>
 
 <VirtualHost *:80>
