@@ -7,3 +7,6 @@ ExecStart=/bin/bash -c 'source /home/frab/.rbenvrc && cd /var/www/frab && RACK_E
 Restart=always
 RestartSec=10
 
+[Install]
+WantedBy=multi-user.target
+
