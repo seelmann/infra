@@ -1,0 +1,17 @@
+# THE BASICS:
+
+Set($rtname, '{{fqdn}}');
+Set($Organization, '{{fqdn}}');
+
+Set($CorrespondAddress, '{{rt.correspond_address}}');
+Set($CommentAddress, '{{rt.comment_address}}');
+
+# THE WEBSERVER:
+
+Set($WebPath, "/rt");
+Set($WebBaseURL, "https://{{fqdn}}");
+
+# THE SMTP SERVER:
+
+Set($SendmailPath, "/etc/request-tracker4/msmtp_wrapper");
+

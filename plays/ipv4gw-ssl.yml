@@ -6,6 +6,7 @@
     - techism
     - munin-masters
     - frab
+    - request-tracker
   roles:
     - role: ipv4gw-ssl
 
