@@ -1,0 +1,41 @@
+---
+
+- name: Delete nixconreg git repo
+  become_user: nixconreg
+  file:
+    path: /tmp/nixconreg
+    state: absent
+
+- name: Copy nixconreg git repo
+  become_user: nixconreg
+  copy:
+    src: "{{ nixconreg.gitsrc }}"
+    dest: /tmp/nixconreg
+
+- name: Clone/update git repository
+  become_user: nixconreg
+  git:
+    repo: /tmp/nixconreg
+    dest: /var/www/nixconreg
+    force: yes
+
+- name: Setup virtualenv
+  become_user: nixconreg
+  pip:
+    virtualenv: /var/www/nixconreg/venv
+    virtualenv_command: pyvenv-3.4
+    name: /var/www/nixconreg/registration/
+    extra_args: "--download-cache /var/cache/nixconreg/pip"
+
+- name: Migrate database
+  become_user: nixconreg
+  shell: /var/www/nixconreg/venv/bin/python3 migrate.py
+  args:
+    chdir: /var/www/nixconreg
+
+- name: Touch WSGI
+  become_user: nixconreg
+  file:
+    path: /var/www/nixconreg/registration.wsgi
+    state: touch
+
