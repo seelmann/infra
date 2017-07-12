@@ -13,6 +13,7 @@
     - sqlite3
     - libapache2-mod-wsgi-py3
     - git
+    - unzip
 
 - name: Enable Apache modules
   apache2_module: name={{item}} state=present

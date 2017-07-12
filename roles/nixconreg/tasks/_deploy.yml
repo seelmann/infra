@@ -6,10 +6,19 @@
     path: /tmp/nixconreg
     state: absent
 
+- name: Create nixconreg git repo
+  become_user: nixconreg
+  file:
+    path: /tmp/nixconreg
+    state: directory
+
+- name: Archive nixconreg git repo
+  local_action: archive path="{{ nixconreg.gitsrc }}" dest="/tmp/nixconreg.zip" format="zip"
+
 - name: Copy nixconreg git repo
   become_user: nixconreg
-  copy:
-    src: "{{ nixconreg.gitsrc }}"
+  unarchive:
+    src: /tmp/nixconreg.zip
     dest: /tmp/nixconreg
 
 - name: Clone/update git repository
