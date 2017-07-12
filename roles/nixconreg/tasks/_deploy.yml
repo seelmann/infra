@@ -19,6 +19,15 @@
     dest: /var/www/nixconreg
     force: yes
 
+- name: Setup settings
+  become_user: nixconreg
+  file:
+    src: /var/www/nixconreg/registration/settings-prod.py
+    dest: /var/www/nixconreg/registration/settings.py
+    owner: nixconreg
+    group: www-data
+    state: link
+
 - name: Setup virtualenv
   become_user: nixconreg
   pip:
