@@ -41,13 +41,14 @@
   become_user: nixconreg
   pip:
     virtualenv: /var/www/nixconreg/venv
+    state: latest
     virtualenv_command: pyvenv-3.4
     name: /var/www/nixconreg/registration/
     extra_args: "--download-cache /var/cache/nixconreg/pip"
 
 - name: Migrate database
   become_user: nixconreg
-  shell: /var/www/nixconreg/venv/bin/python3 migrate.py
+  shell: /var/www/nixconreg/venv/bin/python3 manage.py db upgrade
   args:
     chdir: /var/www/nixconreg
 
