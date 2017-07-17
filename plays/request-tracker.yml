@@ -5,5 +5,5 @@
     - role: ipv4gw-ssl
     - role: apache-ssl-ldap
     - role: request-tracker
-#    - role: backup
+    - role: backup
 

@@ -6,5 +6,5 @@
     - role: apache-ssl-ldap
     - role: useful-packages
     - role: nixconreg
-#    - role: backup
+    - role: backup
 
