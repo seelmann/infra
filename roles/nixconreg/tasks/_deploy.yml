@@ -58,3 +58,13 @@
     path: /var/www/nixconreg/registration.wsgi
     state: touch
 
+- name: Copy crontab
+  become_user: nixconreg
+  copy:
+    src: crontab
+    dest: /tmp/crontab
+
+- name: Enable crontab
+  become_user: nixconreg
+  shell: "crontab < /tmp/crontab"
+
