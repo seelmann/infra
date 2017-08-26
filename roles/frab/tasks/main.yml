@@ -151,4 +151,10 @@
     state: restarted
     daemon_reload: yes
 
+- name: Copy Apache conf
+  copy:
+    src: frab.conf
+    dest: /etc/apache2/conf-enabled/frab.conf
+  notify:
+    - Restart apache2
 
