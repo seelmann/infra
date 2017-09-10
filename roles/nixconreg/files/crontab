@@ -1,3 +1,4 @@
 SHELL=/bin/bash
-5 * * * * cd /var/www/nixconreg && /var/www/nixconreg/venv/bin/python3 manage.py export_participants /var/www/nixconreg/registration/static/participants.json /var/www/nixconreg/registration/static/photos
+*/10 * * * * cd /var/www/nixconreg && /var/www/nixconreg/venv/bin/python3 manage.py export_participants /var/www/nixconreg/registration/static/participants.json /var/www/nixconreg/registration/static/photos
+5 * * * * cd /var/www/nixconreg && /var/www/nixconreg/venv/bin/python3 manage.py expire_rsvps
 
