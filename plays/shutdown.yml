@@ -1,0 +1,14 @@
+---
+
+- hosts: all:!rootservers
+  gather_facts: False
+  roles: 
+    - role: shutdown
+
+- hosts: all:!rootservers
+  gather_facts: False
+  vars:
+    ansible_become: no
+  roles: 
+    - { role: ssh-tools, down: True, clean: False, up: False }
+

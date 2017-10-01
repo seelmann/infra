@@ -2,4 +2,6 @@
 
 - include: _letsencrypt.yml
   with_items: "{{letsencrypt.domains}}"
+  loop_control:
+    loop_var: letsencrypt_domain 
 

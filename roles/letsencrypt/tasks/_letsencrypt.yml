@@ -1,20 +1,23 @@
 ---
 
 - set_fact:
-    letsencrypt_domain: "{{item}}"
-    letsencrypt_work_dir: /tmp/letsencrypt/{{item}}
-    letsencrypt_webroot_dir: /tmp/letsencrypt/{{item}}/webroot
-    letsencrypt_acme_dir: /tmp/letsencrypt/{{item}}/webroot/.well-known/acme-challenge
-    letsencrypt_key_file: /etc/ssl/private/{{item}}.key
-    letsencrypt_csr_file: /etc/ssl/private/{{item}}.csr
-    letsencrypt_crt_file: /etc/ssl/certs/{{item}}.crt
+    letsencrypt_domain: "{{letsencrypt_domain}}"
+    letsencrypt_work_dir: /tmp/letsencrypt/{{letsencrypt_domain}}
+    letsencrypt_webroot_dir: /tmp/letsencrypt/{{letsencrypt_domain}}/webroot
+    letsencrypt_acme_dir: /tmp/letsencrypt/{{letsencrypt_domain}}/webroot/.well-known/acme-challenge
+    letsencrypt_key_file: /etc/ssl/private/{{letsencrypt_domain}}.key
+    letsencrypt_csr_file: /etc/ssl/private/{{letsencrypt_domain}}.csr
+    letsencrypt_crt_file: /etc/ssl/certs/{{letsencrypt_domain}}.crt
     
 - name: Install packages
-  apt: name={{item}} state=present
+  apt: name={{package_name}} state=present
   with_items:
     - python
     - openssl
     - ca-certificates
+  loop_control:
+    loop_var: package_name
+
 
 - name: Check certificate status
   stat: path={{letsencrypt_crt_file}} 
