@@ -1,7 +1,7 @@
-mavenJob('directory-shared-generated') {
+mavenJob('directory-ldap-api-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-shared', 'trunk')
+        github('apache/directory-ldap-api', 'trunk')
     }
     triggers {
         cron('@daily')
