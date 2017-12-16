@@ -1,7 +1,7 @@
 mavenJob('directory-ldap-api-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-ldap-api', 'trunk')
+        github('apache/directory-ldap-api', 'master')
     }
     triggers {
         cron('@daily')
@@ -13,7 +13,7 @@ mavenJob('directory-ldap-api-generated') {
 mavenJob('directory-server-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-server', 'trunk')
+        github('apache/directory-server', 'master')
     }
     triggers {
         cron('@daily')
@@ -25,7 +25,7 @@ mavenJob('directory-server-generated') {
 job('directory-studio-generated') {
     logRotator(-1, 100)
     scm {
-        github('apache/directory-studio', 'trunk')
+        github('apache/directory-studio', 'master')
     }
     triggers {
         cron('@daily')
@@ -56,7 +56,7 @@ job('directory-studio-generated') {
 mavenJob('directory-mavibot-generated') {
     logRotator(-1, 100)
     scm {
-        svn('https://svn.apache.org/repos/asf/directory/mavibot/trunk/')
+        github('apache/directory-mavibot', 'master')
     }
     triggers {
         cron('@daily')
