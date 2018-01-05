@@ -47,14 +47,14 @@
     virtualenv: /var/www/techism/venv
     settings: techism.settings.server
 
-- name: Run tests
-  become_user: techism
-  django_manage:
-    command: test
-    apps: techism
-    app_path: /var/www/techism
-    virtualenv: /var/www/techism/venv
-    settings: techism.settings.server
+#- name: Run tests
+#  become_user: techism
+#  django_manage:
+#    command: test
+#    apps: techism
+#    app_path: /var/www/techism
+#    virtualenv: /var/www/techism/venv
+#    settings: techism.settings.server
 
 - name: Touch WSGI
   become_user: techism
