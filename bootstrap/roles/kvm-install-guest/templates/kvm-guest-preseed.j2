@@ -1,4 +1,4 @@
-#### Contents of the preconfiguration file (for jessie)
+#### Contents of the preconfiguration file (for stretch)
 
 ### Localization
 d-i debian-installer/locale string en_US
@@ -130,5 +130,7 @@ d-i preseed/late_command string \
     echo "" >> /target/etc/network/interfaces; \
     echo "allow-hotplug eth1" >> /target/etc/network/interfaces; \
     echo "iface eth1 inet dhcp" >> /target/etc/network/interfaces; \
-    sed -i '/^deb-src/s/^/#/' /target/etc/apt/sources.list
+    sed -i '/^deb-src/s/^/#/' /target/etc/apt/sources.list; \
+    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/g' /target/etc/default/grub; \
+    in-target grub-mkconfig -o /boot/grub/grub.cfg
 

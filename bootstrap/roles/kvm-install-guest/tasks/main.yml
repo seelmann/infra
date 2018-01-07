@@ -32,7 +32,7 @@
     --graphics none
     --noautoconsole
     --wait=-1
-    --extra-args="console=ttyS0 keymap=us"
+    --extra-args="net.ifnames=0 biosdevname=0 console=ttyS0 keymap=us"
   delegate_to: "{{hypervisor}}"
   async: 1200
   poll: 30

@@ -20,3 +20,9 @@
 - name: Upgrade packages
   apt: upgrade=dist
 
+- name: Clean apt cache
+  apt: autoclean=yes
+
+- name: Autoremove packages
+  apt: autoremove=yes
+

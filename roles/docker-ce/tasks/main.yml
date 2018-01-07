@@ -16,7 +16,7 @@
 
 - name: Add Docker apt repository
   apt_repository:
-    repo: deb https://download.docker.com/linux/debian jessie stable
+    repo: deb https://download.docker.com/linux/debian stretch stable
     state: present
     update_cache: yes
 
