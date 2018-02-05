@@ -1,11 +1,11 @@
 ---
 
-- include: _down.yml
+- import_tasks: _down.yml
   when: down
 
-- include: _clean.yml
+- import_tasks: _clean.yml
   when: clean
 
-- include: _up.yml
+- import_tasks: _up.yml
   when: up
 
