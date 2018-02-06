@@ -1,0 +1,22 @@
+---
+
+- name: Get server details
+  uri:
+    url: "https://api.hetzner.cloud/v1/servers?name={{inventory_hostname}}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{hcloud_api_token}}"
+    return_content: yes
+    status_code: 200
+  register: result
+  delegate_to: localhost
+
+- name: Reboot server
+  uri:
+    url: "https://api.hetzner.cloud/v1/servers/{{result.json.servers[0].id}}/actions/reboot"
+    method: POST
+    headers:
+      Authorization: "Bearer {{hcloud_api_token}}"
+    status_code: 201
+  delegate_to: localhost
+

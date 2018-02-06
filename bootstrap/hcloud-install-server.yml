@@ -1,0 +1,27 @@
+---
+
+## 1st boot into rescue system
+- import_playbook: hcloud-rescue.yml
+
+
+# 2nd install the system
+- hosts: hcloudservers
+  gather_facts: False
+  vars:
+    ansible_become: no
+    ansible_user: root
+    param_mountdev: /dev/sda1
+    param_rootfs: /mnt
+    param_delegate_to: "{{inventory_hostname}}"
+  roles:
+    - role: assert-single-host
+    - role: hcloud-install-server
+    - role: ansible-node
+
+
+# 3rd reboot into new system
+- import_playbook: hcloud-reboot.yml
+
+# 4th configure  the system
+- import_playbook: hcloud-configure.yml
+

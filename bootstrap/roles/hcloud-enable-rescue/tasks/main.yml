@@ -1,0 +1,31 @@
+---
+
+- name: Get server details
+  uri:
+    url: "https://api.hetzner.cloud/v1/servers?name={{inventory_hostname}}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{hcloud_api_token}}"
+    return_content: yes
+    status_code: 200
+  register: result
+  delegate_to: localhost
+
+#- debug: var=result
+#- debug: var=result.content
+#- debug: var=result.json
+#- debug: var=result.json.servers[0].rescue_enabled
+
+- name: Enable rescue system for server
+  uri:
+    url: "https://api.hetzner.cloud/v1/servers/{{result.json.servers[0].id}}/actions/enable_rescue"
+    method: POST
+    headers:
+      Authorization: "Bearer {{hcloud_api_token}}"
+    body_format: json
+    body: >
+      {"type":"linux64","ssh_keys":[{{hcloud_ssh_key_id}}]}
+    status_code: 201
+  when: result.json.servers[0].rescue_enabled == False
+  delegate_to: localhost
+

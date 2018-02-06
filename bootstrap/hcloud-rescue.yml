@@ -1,0 +1,11 @@
+---
+- hosts: all
+  gather_facts: False
+  vars:
+    ansible_become: no
+  roles:
+    - role: assert-single-host
+    - role: hcloud-enable-rescue
+    - role: hcloud-reboot
+    - { role: ssh-tools, down: True, clean: True, up: True, ansible_user: root }
+

@@ -55,5 +55,11 @@
   when: luks_open_result.rc == 1
 
 - name: Create crypted volumne group
-  lvg: vg={{crypt.vg}} pvs={{crypt.mapping}} state=present
+  lvg: vg={{crypt.vg}} pvs=/dev/mapper/{{crypt.name}} state=present
+
+- name: Create volumes
+  include_tasks: _volume.yml
+  with_items: "{{crypt.volumes}}"
+  loop_control:
+    loop_var: volume
 

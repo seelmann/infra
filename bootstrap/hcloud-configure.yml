@@ -1,0 +1,11 @@
+---
+
+- hosts:
+    - hcloudservers
+  gather_facts: False
+  roles:
+    - role: assert-single-host
+    - role: crypt-storage
+#    - role: network
+    - role: firewall
+
