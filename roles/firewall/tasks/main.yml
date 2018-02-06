@@ -14,13 +14,13 @@
 - name: Enable ufw
   ufw: state=enabled
 
-- include: _forward.yml
+- import_tasks: _forward.yml
   when: firewall is defined and ( firewall.forward is defined or firewall.nat is defined )
 
-- include: _nats.yml
+- import_tasks: _nats.yml
   when: firewall is defined and firewall.nat is defined
 
-- include: _rules.yml
+- import_tasks: _rules.yml
   when: firewall is defined and firewall.rules is defined
 
 - meta: flush_handlers
