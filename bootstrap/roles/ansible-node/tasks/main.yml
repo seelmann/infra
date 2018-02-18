@@ -4,12 +4,12 @@
 # Parameters: param_delegate_to, param_rootfs, param_mountdev
 
 - name: Mount root partition
-  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=mounted
+  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=mounted fstab=/tmp/fstab.dummy
   when: param_mountdev is defined
   delegate_to: "{{param_delegate_to}}"
 
 - name: Mount /dev into chroot
-  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=mounted
+  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=mounted fstab=/tmp/fstab.dummy
   delegate_to: "{{param_delegate_to}}"
 
 - name: Install packages required by ansible in chroot
@@ -49,11 +49,15 @@
   delegate_to: "{{param_delegate_to}}"
 
 - name: Umnount /dev in chroot
-  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=unmounted
+  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=unmounted fstab=/tmp/fstab.dummy
   delegate_to: "{{param_delegate_to}}"
 
 - name: Unmount root partition
-  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=unmounted
+  mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=unmounted fstab=/tmp/fstab.dummy
   when: param_mountdev is defined
+  delegate_to: "{{param_delegate_to}}"
+
+- name: Delete /tmp/fstab.dummy
+  file: path=/tmp/fstab.dummy state=absent
   delegate_to: "{{param_delegate_to}}"
 

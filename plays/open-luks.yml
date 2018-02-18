@@ -1,6 +1,6 @@
 ---
 
-- hosts: rootservers
+- hosts: rootservers,hcloudservers
   gather_facts: False
   roles: 
     - role: assert-single-host

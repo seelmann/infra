@@ -1,0 +1,28 @@
+# Loopback device:
+auto lo
+iface lo inet loopback
+
+# device: eth0
+auto eth0
+iface eth0 inet dhcp
+
+iface eth0 inet6 static
+  address {{network.ipv6.address}}
+  netmask 128
+  gateway fe80::1
+  post-up echo "nameserver 2a01:4f8:0:a102::add:9999\nnameserver 2a01:4f8:0:a111::add:9898\nnameserver 2a01:4f8:0:a0a1::add:1010\nnameserver 213.133.100.100\nnameserver213.133.99.99\nnameserver 213.133.98.98\n" > /etc/resolv.conf
+
+# device: br0 for lxc
+auto br0
+iface br0 inet static
+  address        {{network.br0.ipv4.address}}
+  netmask        255.0.0.0
+  bridge_stp     off
+  bridge_ports   none
+  bridge_fd      0
+  bridge_maxwait 0
+
+iface br0 inet6 static
+  address {{network.br0.ipv6.address}}
+  netmask 64
+

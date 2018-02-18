@@ -25,3 +25,14 @@
     - "{{users}}"
   when: item.sudo
 
+- name: Enable passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: "^{{item.name}} "
+    line: "{{item.name}} ALL=(ALL) NOPASSWD: ALL"
+    validate: "/usr/sbin/visudo -cf %s"
+  with_items:
+    - "{{users}}"
+  when: item.sudo
+

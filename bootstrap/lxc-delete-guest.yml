@@ -1,11 +1,11 @@
 ---
-- hosts: lxc-guests
+- hosts: lxc-guests,lxc2-guests
   gather_facts: False
   roles:
     - role: assert-single-host
     - role: lxc-delete-guest
 
-- hosts: lxc-guests
+- hosts: lxc-guests,lxc2-guests
   gather_facts: False
   vars:
     ansible_become: no

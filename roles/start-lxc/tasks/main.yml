@@ -1,0 +1,7 @@
+---
+
+- name: Start LXC service
+  service:
+    name: lxc.service
+    state: started
+

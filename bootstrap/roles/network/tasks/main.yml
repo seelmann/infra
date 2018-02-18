@@ -9,6 +9,12 @@
 - name: Copy /etc/resolv.conf
   template: src=resolv.j2 dest=/etc/resolv.conf
 
+- name: Copy /etc/network/interfaces (hcloud)
+  template: src=interfaces-hcloud.j2 dest=/etc/network/interfaces
+  when: "'hcloudservers' in group_names"
+  notify:
+    - Restart networking
+
 - name: Copy /etc/network/interfaces (root)
   template: src=interfaces-root.j2 dest=/etc/network/interfaces
   when: "'rootservers' in group_names"
@@ -23,7 +29,7 @@
 
 - name: Copy /etc/network/interfaces (lxc)
   template: src=interfaces-lxc.j2 dest=/etc/network/interfaces
-  when: "'lxc-guests' in group_names"
+  when: "'lxc-guests' in group_names or 'lxc2-guests' in group_names"
   notify:
     - Restart networking
 

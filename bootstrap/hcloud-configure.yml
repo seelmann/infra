@@ -6,6 +6,7 @@
   roles:
     - role: assert-single-host
     - role: crypt-storage
-#    - role: network
+    - role: network
     - role: firewall
+    - role: users
 

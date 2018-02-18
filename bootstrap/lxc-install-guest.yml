@@ -1,5 +1,5 @@
 ---
-- hosts: lxc-guests
+- hosts: lxc-guests,lxc2-guests
   gather_facts: False
   vars:
     param_rootfs: /var/lib/lxc/{{inventory_hostname}}/rootfs
@@ -10,12 +10,12 @@
     - role: ansible-node
     - role: lxc-start-guest
 
-- hosts: lxc-guests
+- hosts: lxc-guests,lxc2-guests
   gather_facts: False
   vars:
     ansible_become: no
   roles:
     - { role: ssh-tools, down: False, clean: True, up: True }
 
-- include: lxc-configure-guest.yml
+- import_playbook: lxc-configure-guest.yml
 

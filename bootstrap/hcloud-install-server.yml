@@ -3,7 +3,6 @@
 ## 1st boot into rescue system
 - import_playbook: hcloud-rescue.yml
 
-
 # 2nd install the system
 - hosts: hcloudservers
   gather_facts: False
@@ -17,7 +16,6 @@
     - role: assert-single-host
     - role: hcloud-install-server
     - role: ansible-node
-
 
 # 3rd reboot into new system
 - import_playbook: hcloud-reboot.yml

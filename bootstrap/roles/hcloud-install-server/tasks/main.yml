@@ -11,11 +11,32 @@
 - name: Mount root partition
   mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=mounted
 
+- name: Mount /dev into chroot
+  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=mounted
+
 - name: Remove /toberemoved from /etc/fstab
   lineinfile: dest={{param_rootfs}}/etc/fstab regexp="toberemoved" state=absent
 
 - name: Remove /toberemoved
   file: path={{param_rootfs}}/toberemoved state=absent
+
+- name: Use default network name (eth0)
+  replace:
+    path: '{{param_rootfs}}/etc/network/interfaces'
+    regexp: ens3
+    replace: eth0
+
+- name: Use default network name (eth0)
+  lineinfile:
+    path: '{{param_rootfs}}/etc/default/grub'
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"'
+
+- name: Execute grub
+  command: chroot {{param_rootfs}} /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
+
+- name: Umnount /dev in chroot
+  mount: name={{param_rootfs}}/dev src=/dev fstype=none opts=bind state=unmounted
 
 - name: Unmount root partition
   mount: name={{param_rootfs}} src={{param_mountdev}} fstype=ext4 state=unmounted

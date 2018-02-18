@@ -7,5 +7,16 @@
   filesystem: fstype=ext4 dev=/dev/mapper/{{crypt.vg}}-{{volume.name}}
 
 - name: Mount /dev/mapper/{{crypt.vg}}-{{volume.name}}
-  mount: src=/dev/mapper/{{crypt.vg}}-{{volume.name}} path={{volume.mountpoint}} state=mounted fstype=ext4
+  mount:
+    src: '/dev/mapper/{{crypt.vg}}-{{volume.name}}'
+    path: '{{volume.mountpoint}}'
+    fstype: ext4
+    opts: nofail
+    state: mounted
+
+#- name: Remove /dev/mapper/{{crypt.vg}}-{{volume.name}} from /etc/fstab
+#  lineinfile:
+#    path: '/etc/fstab'
+#    regexp: '/var/lib/lxc'
+#    state: absent
 

@@ -1,11 +1,12 @@
 ---
 
-- hosts: lxc-guests
+- hosts: lxc-guests,lxc2-guests
   gather_facts: False
   roles:
-    #- role: assert-single-host
+    - role: assert-single-host
     - role: lxc-guest
     - role: network
     - role: firewall
     - role: essential-packages
+    - role: users
 

@@ -1,6 +1,5 @@
 ---
-- hosts: lxc-hosts
+- hosts: lxc-hosts,lxc2-hosts
   roles: 
-    - role: network
     - role: lxc-host
 

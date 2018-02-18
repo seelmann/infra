@@ -1,0 +1,19 @@
+---
+
+- hosts: hcloudservers
+  gather_facts: False
+  roles: 
+    - role: assert-single-host
+    - role: reboot
+
+- hosts: hcloudservers
+  gather_facts: False
+  vars:
+    ansible_become: no
+  roles: 
+    - role: assert-single-host
+    - { role: ssh-tools, down: True, clean: False, up: True }
+
+- import_playbook: open-luks.yml
+- import_playbook: start-lxc.yml
+
