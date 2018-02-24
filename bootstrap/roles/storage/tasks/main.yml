@@ -1,0 +1,15 @@
+---
+
+- name: Create crypt device
+  include_tasks: _crypt.yml
+  when: storage.crypt is defined
+  vars:
+    crypt: '{{storage.crypt}}'
+
+- name: Create storagebox device
+  include_tasks: _storagebox.yml
+  when: storage.storagebox is defined
+  vars:
+    storagebox: '{{storage.storagebox}}'
+
+

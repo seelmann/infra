@@ -1,0 +1,12 @@
+---
+
+- name: Check if LUKS device is already closed
+  shell: cryptsetup status {{crypt.name}} | grep "is active"
+  register: luks_open_result
+  failed_when: luks_open_result.rc != 0 and luks_open_result.rc != 1
+  changed_when: luks_open_result.rc != 0 and luks_open_result.rc != 1
+
+- name: Close LUKS device
+  shell: cryptsetup luksClose {{crypt.name}}
+  when: luks_open_result.rc == 0
+

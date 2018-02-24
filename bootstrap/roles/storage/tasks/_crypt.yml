@@ -1,0 +1,76 @@
+---
+
+- name: Install cryptsetup packages
+  apt: name={{item}} state=present
+  with_items:
+    - dmsetup
+    - cryptsetup
+
+# TODO: implement lvm
+
+- name: Check if LUKS device already exists
+  shell: cryptsetup -v isLuks {{crypt.dev}} | grep "successful"
+  register: is_luks_result
+  failed_when: is_luks_result.rc != 0 and is_luks_result.rc != 1
+  changed_when: is_luks_result.rc != 0
+  
+#- name: Shred LUKS device
+#  command: shred -n1 -z -v {{crypt.dev}}
+#  when: is_luks_result.rc == 1
+#  async: 3600
+#  poll: 30
+
+- name: Copy passphrase
+  copy: content="{{luks_pass}}" dest=/root/.luks_pass_tmp
+  when: is_luks_result.rc == 1
+
+- name: Create LUKS device
+  shell: cat /root/.luks_pass_tmp | cryptsetup -q -c aes-xts-plain -s 512 luksFormat {{crypt.dev}}
+  when: is_luks_result.rc == 1
+
+- name: Delete passphrase
+  command: shred -z -u /root/.luks_pass_tmp
+  when: is_luks_result.rc == 1
+
+- name: Check if LUKS device is already opened
+  shell: cryptsetup status {{crypt.name}} | grep "is active"
+  register: luks_open_result
+  failed_when: luks_open_result.rc != 0 and luks_open_result.rc != 1
+  changed_when: luks_open_result.rc != 0
+
+- name: Copy passphrase
+  copy: content="{{luks_pass}}" dest=/root/.luks_pass_tmp
+  when: luks_open_result.rc == 1
+
+- name: Open LUKS device
+  shell: cat /root/.luks_pass_tmp | cryptsetup luksOpen {{crypt.dev}} {{crypt.name}}
+  when: luks_open_result.rc == 1
+
+- name: Delete passphrase
+  command: shred -z -u /root/.luks_pass_tmp
+  when: luks_open_result.rc == 1
+
+- name: Create entry in /etc/crypttab
+  crypttab:
+    name: '{{crypt.name}}'
+    backing_device: '{{crypt.dev}}'
+    password: none
+    opts: noauto,nofail
+    state: present
+
+- name: Create filesystem /dev/mapper/{{crypt.name}}
+  filesystem:
+    fstype: '{{crypt.fstype}}'
+    dev: '/dev/mapper/{{crypt.name}}'
+  when: crypt.fstype is defined 
+
+- name: Mount /dev/mapper/{{crypt.name}}
+  mount:
+    src: '/dev/mapper/{{crypt.name}}'
+    path: '{{crypt.path}}'
+    fstype: '{{crypt.fstype}}'
+    opts: nofail
+    state: mounted
+  when: crypt.fstype is defined 
+
+

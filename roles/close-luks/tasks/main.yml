@@ -1,0 +1,24 @@
+---
+
+#- name: Close crypt device (crypt)
+#  include_tasks: _close-luks.yml
+#  when: crypt is defined
+
+#- name: Close crypt device (storage.crypt)
+#  include_tasks: _close-luks.yml
+#  when: storage.crypt is defined
+#  vars:
+#    crypt: '{{storage.crypt}}'
+
+- name: Unmount crypt device (storage.storagebox.crypt)
+  mount:
+    path: '{{storage.storagebox.crypt.path}}'
+    state: unmounted
+  when: storage.storagebox.crypt is defined
+
+- name: Close crypt device (storage.storagebox.crypt)
+  include_tasks: _close-luks.yml
+  when: storage.storagebox.crypt is defined
+  vars:
+    crypt: '{{storage.storagebox.crypt}}'
+

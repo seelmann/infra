@@ -1,0 +1,26 @@
+---
+
+- name: Install CIFS packages
+  apt: name={{item}} state=present
+  with_items:
+    - cifs-utils
+
+- name: Mount via CIFS
+  mount:
+    src: '{{storagebox.url}}'
+    path: '{{storagebox.path}}'
+    fstype: 'cifs'
+    opts: 'user={{storagebox.user}},pass={{storagebox.password}}'
+    state: mounted
+
+- name: Create image {{storagebox.image.path}}
+  command: dd if=/dev/zero of={{storagebox.image.path}} bs=1M count={{storagebox.image.size | regex_replace('^(?P<size>[0-9]+)G$', '\g<size>000')}}
+  args:
+    creates: '{{storagebox.image.path}}'
+
+- name: Create crypt device
+  include_tasks: _crypt.yml
+  when: storagebox.crypt is defined
+  vars:
+    crypt: '{{storagebox.crypt}}'
+

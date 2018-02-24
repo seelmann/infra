@@ -11,5 +11,5 @@
   service:
     name: lxc.service
     enabled: false
-  when: "crypt.volumes is defined and '/var/lib/lxc' in crypt.volumes|map(attribute='mountpoint')"
+  when: storage.crypt is defined and storage.crypt.path == '/var/lib/lxc'
 

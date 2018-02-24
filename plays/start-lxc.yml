@@ -1,0 +1,7 @@
+---
+
+- hosts: lxc-hosts,lxc2-hosts
+  gather_facts: False
+  roles:
+    - role: start-lxc
+

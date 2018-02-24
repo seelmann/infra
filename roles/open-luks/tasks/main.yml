@@ -1,25 +1,18 @@
 ---
 
-- name: Check if LUKS device is already opened
-  shell: cryptsetup status {{crypt.name}} | grep "is active"
-  register: luks_open_result
-  failed_when: luks_open_result.rc != 0 and luks_open_result.rc != 1
-  changed_when: luks_open_result.rc != 0
+- name: Open crypt device (crypt)
+  include_tasks: _open-luks.yml
+  when: crypt is defined
 
-- name: Copy passphrase
-  copy: content="{{luks_pass}}" dest=/root/.luks_pass_tmp
-  when: luks_open_result.rc == 1
+- name: Open crypt device (storage.crypt)
+  include_tasks: _open-luks.yml
+  when: storage.crypt is defined
+  vars:
+    crypt: '{{storage.crypt}}'
 
-- name: Open LUKS device
-  shell: cat /root/.luks_pass_tmp | cryptsetup luksOpen {{crypt.dev}} {{crypt.name}}
-  when: luks_open_result.rc == 1
-
-- name: Delete passphrase
-  command: shred -z -u /root/.luks_pass_tmp
-  when: luks_open_result.rc == 1
-
-#- name: Create crypted volumne group
-#  lvg: vg={{crypt.vg}} pvs={{crypt.mapping}} state=present
-- name: Activate volume group
-  command: vgchange -a y {{crypt.vg}}
+- name: Open crypt device (storage.storagebox.crypt)
+  include_tasks: _open-luks.yml
+  when: storage.storagebox.crypt is defined
+  vars:
+    crypt: '{{storage.storagebox.crypt}}'
 
