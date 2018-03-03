@@ -1,0 +1,31 @@
+---
+
+- name: Install packages
+  apt: name={{item}} state=present
+  with_items:
+    - openssl
+    - ca-certificates
+    - nginx
+
+- name: Disable default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify:
+    - Restart nginx
+
+- name: Copy reverse proxy config
+  template:
+    src: reverse-proxy.j2
+    dest: /etc/nginx/sites-available/reverse-proxy.conf
+  notify:
+    - Restart nginx
+
+- name: Enable reverse proxy site
+  file:
+    src: /etc/nginx/sites-available/reverse-proxy.conf
+    dest: /etc/nginx/sites-enabled/reverse-proxy.conf
+    state: link
+  notify:
+    - Restart nginx
+

@@ -69,7 +69,7 @@ def get_crt(account_key, csr, acme_dir, log=LOGGER, CA=DEFAULT_CA):
     if proc.returncode != 0:
         raise IOError("Error loading {0}: {1}".format(csr, err))
     domains = set([])
-    common_name = re.search(r"Subject:.*? CN=([^\s,;/]+)", out.decode('utf8'))
+    common_name = re.search(r"Subject:.*? CN\s?=\s?([^\s,;/]+)", out.decode('utf8'))
     if common_name is not None:
         domains.add(common_name.group(1))
     subject_alt_names = re.search(r"X509v3 Subject Alternative Name: \n +([^\n]+)\n", out.decode('utf8'), re.MULTILINE|re.DOTALL)
@@ -82,7 +82,7 @@ def get_crt(account_key, csr, acme_dir, log=LOGGER, CA=DEFAULT_CA):
     log.info("Registering account...")
     code, result = _send_signed_request(CA + "/acme/new-reg", {
         "resource": "new-reg",
-        "agreement": "https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf",
+        "agreement": json.loads(urlopen(CA + "/directory").read().decode('utf8'))['meta']['terms-of-service'],
     })
     if code == 201:
         log.info("Registered!")
@@ -112,15 +112,15 @@ def get_crt(account_key, csr, acme_dir, log=LOGGER, CA=DEFAULT_CA):
             wellknown_file.write(keyauthorization)
 
         # check that the file is in place
-        #wellknown_url = "http://{0}/.well-known/acme-challenge/{1}".format(domain, token)
-        #try:
-        #    resp = urlopen(wellknown_url)
-        #    resp_data = resp.read().decode('utf8').strip()
-        #    assert resp_data == keyauthorization
-        #except (IOError, AssertionError):
-        #    os.remove(wellknown_path)
-        #    raise ValueError("Wrote file to {0}, but couldn't download {1}".format(
-        #        wellknown_path, wellknown_url))
+        wellknown_url = "http://{0}/.well-known/acme-challenge/{1}".format(domain, token)
+        try:
+            resp = urlopen(wellknown_url)
+            resp_data = resp.read().decode('utf8').strip()
+            assert resp_data == keyauthorization
+        except (IOError, AssertionError):
+            os.remove(wellknown_path)
+            raise ValueError("Wrote file to {0}, but couldn't download {1}".format(
+                wellknown_path, wellknown_url))
 
         # notify challenge are met
         code, result = _send_signed_request(challenge['uri'], {

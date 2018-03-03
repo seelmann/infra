@@ -24,12 +24,12 @@
   register: crt
 
 - name: Private key
-  include: _key.yml
+  import_tasks: _key.yml
 
 - name: CSR
-  include: _csr.yml
+  import_tasks: _csr.yml
   
 - name: Certificate
-  include: _crt.yml
+  import_tasks: _crt.yml
   when: not crt.stat.exists or crt.stat.size == 0 or ansible_date_time.epoch|float - crt.stat.mtime > 60*60*24*45
 

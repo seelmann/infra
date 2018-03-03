@@ -1,0 +1,6 @@
+---
+
+- hosts: ipv4gw
+  roles:
+    - role: ipv4gw
+

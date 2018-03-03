@@ -6,11 +6,13 @@
 - name: Create acme dir
   file: path={{letsencrypt_acme_dir}} state=directory mode=0755
 
+- name: Copy Simple HTTP server
+  copy: src=server.py dest={{letsencrypt_work_dir}}
+
 - name: Run Simple HTTP server
-  shell: "cd {{letsencrypt_webroot_dir}} && python -m SimpleHTTPServer 80"
+  shell: "cd {{letsencrypt_webroot_dir}} && python3 {{letsencrypt_work_dir}}/server.py"
   async: 60
   poll: 0
-
 
 - name: Create working directory
   file: path={{letsencrypt_work_dir}} state=directory mode=0755
@@ -18,12 +20,11 @@
 - name: Copy account key
   copy: content={{letsencrypt_account_key}} dest={{letsencrypt_work_dir}}/account.key mode="u=rw,g=,o="
 
-
 - name: Copy acme-tiny
   copy: src=acme_tiny.py dest={{letsencrypt_work_dir}}
 
 - name: Run acme-tiny
-  shell: "cd {{letsencrypt_work_dir}} && python acme_tiny.py --account-key ./account.key --csr {{letsencrypt_csr_file}} --acme-dir {{letsencrypt_acme_dir}}/ > {{letsencrypt_crt_file}}"
+  shell: "cd {{letsencrypt_work_dir}} && python3 acme_tiny.py --account-key ./account.key --csr {{letsencrypt_csr_file}} --acme-dir {{letsencrypt_acme_dir}}/ > {{letsencrypt_crt_file}}"
 
 # View certificate:
 # openssl x509 -in domain.crt -noout -text
@@ -38,6 +39,6 @@
   file: path={{letsencrypt_work_dir}} state=absent
 
 - name: Kill Simple HTTP server
-  shell: pkill -f "python -m SimpleHTTPServer 80"
+  shell: pkill -f "python3 {{letsencrypt_work_dir}}/server.py"
   failed_when: False
 
