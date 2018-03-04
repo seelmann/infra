@@ -15,9 +15,9 @@
     - python
     - openssl
     - ca-certificates
+    - ssl-cert
   loop_control:
     loop_var: package_name
-
 
 - name: Check certificate status
   stat: path={{letsencrypt_crt_file}} 

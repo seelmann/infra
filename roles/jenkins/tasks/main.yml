@@ -69,6 +69,7 @@
     - xvfb
     - ws-cleanup
     - maven-plugin
+    - metrics
   notify: Restart jenkins
 
 - name: Enable tmpfs

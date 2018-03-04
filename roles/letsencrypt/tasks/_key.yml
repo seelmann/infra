@@ -9,5 +9,5 @@
   when: not pk.stat.exists
 
 - name: Set permissions of private key file
-  file: path={{letsencrypt_key_file}} owner=root group=root mode=0600
+  file: path={{letsencrypt_key_file}} owner=root group=ssl-cert mode=0640
 

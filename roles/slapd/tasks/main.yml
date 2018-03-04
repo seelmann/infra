@@ -14,6 +14,7 @@
     - { q: slapd/domain, v: "{{network.domain}}", t: string }
     - { q: shared/organization, v: "{{network.domain}}", t: string }
     - { q: slapd/backend, v: MDB, t: string }
+  no_log: True
 
 - name: Install OpenLDAP
   apt: name={{item}} state=present
