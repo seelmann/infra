@@ -1,11 +1,19 @@
 ---
 
-- include: packages.yml
-- include: java.yml
+- import_tasks: _packages.yml
+- import_tasks: _openjdk.yml
+#- import_tasks: _oraclejava.yml
 
 - name: Enable tmpfs
-  service:
+  copy:
+    remote_src: yes
+    src: /usr/share/systemd/tmp.mount
+    dest: /etc/systemd/system/ 
+
+- name: Enable tmpfs
+  systemd:
     name: tmp.mount
     enabled: yes
     state: started
+    daemon_reload: yes
 

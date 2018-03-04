@@ -1,0 +1,8 @@
+---
+
+- name: Install Java8
+  apt: name=openjdk-8-jdk state=latest
+
+- name: Set /dev/urandom as source
+  lineinfile: dest=/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security regexp="^securerandom\.source=" line="securerandom.source=file:/dev/urandom" state=present
+

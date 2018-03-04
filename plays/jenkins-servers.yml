@@ -1,9 +1,9 @@
 ---
 - hosts: jenkins-servers
   roles:
-    #- role: firewall
-    #- role: ipv4gw-ssl
-    #- role: apache-ssl-ldap
+    - role: firewall
+    - role: letsencrypt
+    - role: apache-ssl-ldap
     - role: devtools
     - role: docker-ce
     - role: jenkins

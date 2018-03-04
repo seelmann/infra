@@ -2,12 +2,12 @@
 
 - name: Add Jenkins apt repository key
   apt_key:
-    url: http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
+    url: http://pkg.jenkins.io/debian/jenkins.io.key
     state: present
 
 - name: Add Jenkins apt repository
   apt_repository:
-    repo: deb http://pkg.jenkins-ci.org/debian binary/ 
+    repo: deb http://pkg.jenkins.io/debian binary/
     state: present
     update_cache: yes
 
@@ -31,6 +31,7 @@
     - hudson.tasks.Maven.xml
     - org.jenkinsci.plugins.xvfb.Xvfb.xml
   notify: Restart jenkins
+  # TODO: must restart Jenkins immediately if config.xml changed
 
 - name: Create seed job directory
   file:
@@ -58,7 +59,6 @@
 - name: Install Jenkins plugins
   shell: java -jar /tmp/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
     creates=/var/lib/jenkins/plugins/{{ item }}.jpi
-  #with_items: "{{jenkins.plugins}}"
   with_items:
     - subversion
     - git
@@ -68,6 +68,7 @@
     - job-dsl
     - xvfb
     - ws-cleanup
+    - maven-plugin
   notify: Restart jenkins
 
 - name: Enable tmpfs
