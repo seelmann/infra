@@ -1,0 +1,9 @@
+---
+
+- hosts: nextcloud-servers
+  roles:
+    - role: firewall
+    - role: letsencrypt
+    - role: apache-ssl-ldap
+    - role: nextcloud
+

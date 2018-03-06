@@ -1,0 +1,16 @@
+{
+    "apps": {
+        "user_ldap": {
+            "ldap_host": "{{ldap.fqdn}}",
+            "ldap_port": "389",
+            "ldap_tls": "1",
+            "ldap_base": "{{ldap.baseDN}}",
+            "ldap_userlist_filter": "(objectclass=inetOrgPerson)",
+            "ldap_userfilter_objectclass": "inetOrgPerson",
+            "ldap_display_name": "cn",
+            "ldap_login_filter": "(&(objectclass=inetOrgPerson)(uid=%uid))",
+            "ldap_configuration_active": "1"
+        }
+    }
+}
+

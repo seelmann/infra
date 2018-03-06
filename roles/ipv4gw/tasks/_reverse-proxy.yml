@@ -7,6 +7,15 @@
     - ca-certificates
     - nginx
 
+- name: Copy nginx unit file
+  copy:
+    src: nginx.service
+    dest: /etc/systemd/system/nginx.service
+
+- name: Reload nginx unit file
+  systemd:
+    daemon_reload: yes
+
 - name: Disable default site
   file:
     path: /etc/nginx/sites-enabled/default
