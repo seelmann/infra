@@ -1,25 +1,87 @@
 ---
 
-- name: Create data directory
-  file:
-    path: /srv/nextcloud
-    state: directory
+- name: Configure MariaDB
+  debconf:
+    name: mariadb-server
+    question: "{{item.q}}"
+    value: "{{item.v}}"
+    vtype: "{{item.t}}"
+  with_items:
+    - { q: mysql-server/root_password, v: "{{mysql_password}}", t: password }
+    - { q: mysql-server/root_password_again, v: "{{mysql_password}}", t: password }
+  changed_when: False
+  no_log: True
 
-- name: Pull Nextcloud docker image
-  docker_image:
-    name: nextcloud
-    tag: 12
+- name: Allow root access to MySQL
+  template:
+    src: root.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
 
-- name: Run Nextcloud docker container
-  docker_container:
-    name: nextcloud
-    image: nextcloud:12
-    restart_policy: always
-    ports:
-      - '8080:80'
-    log_driver: syslog
-    volumes: 
-      - '/srv/nextcloud:/var/www/html'
+- name: Install dependencies
+  apt: name={{item}}
+  with_items:
+    - apache2
+    - mariadb-server
+    - libapache2-mod-php7.0
+    - php7.0-gd
+    - php7.0-json
+    - php7.0-mysql
+    - php7.0-curl
+    - php7.0-mbstring
+    - php7.0-intl
+    - php7.0-mcrypt
+    - php-imagick
+    - php7.0-xml
+    - php7.0-zip
+    - php7.0-ldap
+
+- name: Configure MariaDB login
+  shell: mysql -e "GRANT ALL PRIVILEGES on *.* to 'root'@'localhost' IDENTIFIED BY '{{mysql_password}}';"
+
+- name: Download Nextcloud
+  get_url:
+    url: https://download.nextcloud.com/server/releases/nextcloud-12.0.5.tar.bz2
+    dest: /tmp/nextcloud.tar.bz2
+    checksum: sha512:6a07384fef1ca57e82c5867c7f4898b9dcc94bd99d25ea49cf44606833e0045f9503f2c9256b71845603bd7b911fdabea39e1bebe8cddb69d9d752c69101bc27
+
+- name: Install Nextcloud
+  unarchive:
+    src: /tmp/nextcloud.tar.bz2
+    dest: /var/www
+    remote_src: yes
+    owner: www-data
+    group: www-data
+
+- name: Copy Apache Nextcloud config
+  template:
+    src: nextcloud.j2
+    dest: /etc/apache2/conf-available/nextcloud.conf
+  notify:
+    - Restart apache2
+
+- name: Enable Apache Nextcloud config
+  shell: a2enconf nextcloud | grep "already enabled"
+  register: enable_rp_result
+  failed_when: enable_rp_result.rc != 0 and enable_rp_result.rc != 1
+  changed_when: enable_rp_result.rc != 0
+  notify:
+    - Restart apache2
+
+- name: Enable Apache modules
+  apache2_module: name={{item}} state=present
+  with_items:
+    - rewrite
+    - headers
+    - env
+    - dir
+    - mime
+    - authnz_ldap
+    - ssl
+  notify:
+    - Restart apache2
 
 
 - name: Check if Nextcloud is set up
@@ -29,20 +91,20 @@
   changed_when: installed_result.rc == 1
 
 - name: Setup Nextcloud
-  shell: "{{occ}} maintenance:install --database 'sqlite' --database-name 'nextcloud' --admin-user 'ncadmin' --admin-pass '{{nextcloud_password}}'"
+  shell: "{{occ}} maintenance:install --database 'mysql' --database-name 'nextcloud' --database-user 'root' --database-pass '{{mysql_password}}' --admin-user 'ncadmin' --admin-pass '{{nextcloud_password}}'"
   when: installed_result.rc == 1
 
 
 - name: Copy reverse proxy config
   template:
     src: reverseproxy.config.json.j2
-    dest: /srv/nextcloud/config/reverseproxy.config.json
+    dest: /var/www/nextcloud/config/reverseproxy.config.json
     owner: www-data
     group: www-data
     mode: 0660
 
 - name: Import reverse proxy config
-  shell: "{{occ}} config:import /var/www/html/config/reverseproxy.config.json"
+  shell: "{{occ}} config:import /var/www/nextcloud/config/reverseproxy.config.json"
   changed_when: False
 
 
@@ -64,12 +126,16 @@
 - name: Copy LDAP config
   template:
     src: ldap.config.json.j2
-    dest: /srv/nextcloud/config/ldap.config.json
+    dest: /var/www/nextcloud/config/ldap.config.json
     owner: www-data
     group: www-data
     mode: 0660
 
 - name: Import LDAP config
-  shell: "{{occ}} config:import /var/www/html/config/ldap.config.json"
+  shell: "{{occ}} config:import /var/www/nextcloud/config/ldap.config.json"
+  changed_when: False
+
+- name: Update .htaccess config
+  shell: "{{occ}} maintenance:update:htaccess"
   changed_when: False
 

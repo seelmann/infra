@@ -1,14 +1,16 @@
 {
     "system": {
         "trusted_domains": [
-            "localhost","172.17.0.1"
+            "localhost"
         ],
         "trusted_proxies": [
-            "localhost","172.17.0.1"
+            "localhost"
         ],
         "overwritehost": "{{nextcloud.fqdn}}",
         "overwriteprotocol": "https",
-        "overwritewebroot": "/"
+        "overwritewebroot": "/",
+        "overwrite.cli.url": "https://{{nextcloud.fqdn}}",
+        "htaccess.RewriteBase": "/"
     }
 }
 

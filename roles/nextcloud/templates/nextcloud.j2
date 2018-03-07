@@ -1,0 +1,20 @@
+Alias / "/var/www/nextcloud/"
+
+<Directory /var/www/nextcloud/>
+  Options +FollowSymlinks
+  AllowOverride All
+
+ <IfModule mod_dav.c>
+  Dav off
+ </IfModule>
+
+ SetEnv HOME /var/www/nextcloud
+ SetEnv HTTP_HOME /var/www/nextcloud
+
+</Directory>
+
+<Directory "/var/www/nextcloud/data/">
+  # just in case if .htaccess gets disabled
+  Require all denied
+</Directory>
+

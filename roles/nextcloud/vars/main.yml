@@ -1,4 +1,4 @@
 ---
 
-occ: docker exec --user www-data nextcloud php occ
+occ: cd /var/www/nextcloud && sudo -u www-data php occ
 
