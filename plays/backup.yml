@@ -1,5 +1,10 @@
 ---
-- hosts: backups
+
+- hosts: backup-masters
   roles:
-    - role: backup
+    - role: backup-master
+
+- hosts: backup-nodes
+  roles:
+    - role: backup-node
 

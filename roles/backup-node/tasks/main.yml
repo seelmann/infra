@@ -1,0 +1,43 @@
+---
+
+- name: Create backup user
+  user:
+    name: '{{backup_user}}'
+    #groups: sudo
+    shell: /bin/bash
+    #createhome: yes
+    state: present
+
+- name: Slurp backup user public key
+  slurp: src=/root/.ssh/id_rsa.pub
+  register: backup_user_public_key
+  delegate_to: '{{backup.master}}'
+
+- name: Set authorized key
+  authorized_key:
+    user: '{{backup_user}}'
+    key: '{{backup_user_public_key.content | b64decode}}'
+    state: present
+
+- name: Slurp host public keys
+  slurp: src=/etc/ssh/ssh_host_ecdsa_key.pub
+  register: host_public_key
+
+- name: Set known hosts entry
+  known_hosts:
+    name: '{{network.ipv6.address}}'
+    key: '{{network.ipv6.address}} {{host_public_key.content | b64decode}}'
+  delegate_to: '{{backup.master}}'
+
+- name: Allow execution of rsync and scripts
+  set_fact:
+    allow_rsync_and_scripts: '/usr/bin/rsync,{{  backup.scripts | map(attribute="script") | join(",")}}'
+
+- name: Allow execution of rsync and scripts
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^{{backup_user}} ALL\='
+    line: '{{backup_user}} ALL= NOPASSWD:{{allow_rsync_and_scripts}}'
+    validate: 'visudo -cf %s'
+
