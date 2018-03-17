@@ -12,51 +12,38 @@
   notify:
     - Restart munin-node
 
-- name: Install Munin dependencies for Apache
-  apt: name=libwww-perl state=present
-  when: apache is defined
-
-- name: Enable Munin Apache plugin
-  file:
-    src: /usr/share/munin/plugins/{{item}}
-    dest: /etc/munin/plugins/{{item}}
-    state: link
-  with_items:
-    - apache_accesses
-    - apache_processes
-    - apache_volume
-  notify:
-    - Restart munin-node
-  when: apache is defined
-
-- name: Check if Postgresql is installed
-  shell: "dpkg -l | grep postgresql"
-  register: pg_result
-  failed_when: pg_result.rc != 0 and pg_result.rc != 1
-  changed_when: pg_result.rc == 0
-
-- name: Install Munin dependencies for Postgresql
-  apt: name=libdbd-pg-perl state=present
-  when: pg_result.rc == 0
-
-- name: Enable Munin Postgresql plugin
-  file:
-    src: /usr/share/munin/plugins/{{item.src}}
-    dest: /etc/munin/plugins/{{item.dest}}
-    state: link
-  with_items:
-    - { src: postgres_connections_, dest: postgres_connections_ALL }
-  notify:
-    - Restart munin-node
-  when: pg_result.rc == 0
-
 - name: Allow connection to munin port 4949
   ufw:
     rule: allow
     port: 4949
-    src: "{{munin_node.master}}"
+    src: "{{hostvars[munin.master].network.ipv6.address}}"
     proto: tcp
   notify:
     - Reload ufw
 
+- name: Get installed packages
+  shell: dpkg-query -f '${binary:Package}\n' -W
+  register: packages
+  changed_when: False
+
+- include_tasks: _apache2.yml
+  when: '"apache2" in packages.stdout_lines'
+
+- include_tasks: _nginx.yml
+  when: '"nginx" in packages.stdout_lines'
+
+- include_tasks: _mysql.yml
+  when: '"mariadb-server" in packages.stdout_lines'
+
+- include_tasks: _postgresql.yml
+  when: '"postgresql" in packages.stdout_lines'
+
+- include_tasks: _slapd.yml
+  when: '"slapd" in packages.stdout_lines'
+
+- include_tasks: _munin.yml
+  when: '"munin" in packages.stdout_lines'
+
+- include_tasks: _java.yml
+  when: '"openjdk-8-jre:amd64" in packages.stdout_lines'
 

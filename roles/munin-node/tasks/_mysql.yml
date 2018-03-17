@@ -1,0 +1,22 @@
+---
+
+- name: Install Munin dependencies for MySQL
+  apt:
+    name: '{{item}}'
+    state: present
+  with_items:
+    - libcache-cache-perl
+
+- name: Enable Munin MySQL plugin
+  file:
+    src: /usr/share/munin/plugins/{{item}}
+    dest: /etc/munin/plugins/{{item}}
+    state: link
+  with_items:
+    - mysql_bytes
+    - mysql_queries
+    - mysql_slowqueries
+    - mysql_threads
+  notify:
+    - Restart munin-node
+

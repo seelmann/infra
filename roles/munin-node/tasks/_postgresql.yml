@@ -1,0 +1,15 @@
+---
+
+- name: Install Munin dependencies for Postgresql
+  apt: name=libdbd-pg-perl state=present
+
+- name: Enable Munin Postgresql plugin
+  file:
+    src: /usr/share/munin/plugins/{{item.src}}
+    dest: /etc/munin/plugins/{{item.dest}}
+    state: link
+  with_items:
+    - { src: postgres_connections_, dest: postgres_connections_ALL }
+  notify:
+    - Restart munin-node
+

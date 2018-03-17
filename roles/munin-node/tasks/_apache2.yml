@@ -1,0 +1,17 @@
+---
+
+- name: Install Munin dependencies for Apache
+  apt: name=libwww-perl state=present
+
+- name: Enable Munin Apache plugin
+  file:
+    src: /usr/share/munin/plugins/{{item}}
+    dest: /etc/munin/plugins/{{item}}
+    state: link
+  with_items:
+    - apache_accesses
+    - apache_processes
+    - apache_volume
+  notify:
+    - Restart munin-node
+

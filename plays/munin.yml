@@ -1,0 +1,13 @@
+---
+
+- hosts: munin-nodes
+  roles:
+    - role: munin-node
+
+- hosts: munin-masters
+  roles:
+    - role: firewall
+    - role: letsencrypt
+    - role: apache-ssl-ldap
+    - role: munin-master
+
