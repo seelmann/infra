@@ -19,7 +19,7 @@ mavenJob('directory-server-generated') {
         cron('@daily')
     }
     rootPOM('pom.xml')
-    goals('-V clean install')
+    goals('-V clean install -Dtest='!ClientAddRequestTest,!OperationWithIndexTest,!*PerfIT,!ReferralIT,!TestUtils' -DfailIfNoTests=false')
 }
 
 job('directory-studio-generated') {
