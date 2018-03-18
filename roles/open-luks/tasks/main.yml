@@ -6,13 +6,13 @@
 
 - name: Open crypt device (storage.crypt)
   include_tasks: _open-luks.yml
-  when: storage.crypt is defined
+  when: storage is defined and storage.crypt is defined
   vars:
     crypt: '{{storage.crypt}}'
 
 - name: Open crypt device (storage.storagebox.crypt)
   include_tasks: _open-luks.yml
-  when: storage.storagebox is defined and storage.storagebox.crypt is defined
+  when: storage is defined and storage.storagebox is defined and storage.storagebox.crypt is defined
   vars:
     crypt: '{{storage.storagebox.crypt}}'
 
