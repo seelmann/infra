@@ -18,6 +18,7 @@
     - jenkins
     - xvfb
     - iceweasel
+    - rpm
 
 - name: Copy config
   copy:

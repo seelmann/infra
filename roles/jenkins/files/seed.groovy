@@ -19,8 +19,40 @@ mavenJob('directory-server-generated') {
         cron('@daily')
     }
     rootPOM('pom.xml')
-    goals('-V clean install -Dtest='!ClientAddRequestTest,!OperationWithIndexTest,!*PerfIT,!ReferralIT,!TestUtils' -DfailIfNoTests=false')
+    goals('-V clean install -Dtest="!ClientAddRequestTest,!OperationWithIndexTest,!*PerfIT,!ReferralIT,!TestUtils" -DfailIfNoTests=false')
 }
+
+job('directory-server-installers-docker-generated') {
+    logRotator(-1, 100)
+    scm {
+        github('apache/directory-server', 'master')
+    }
+    triggers {
+        cron('@daily')
+    }
+    steps {
+        maven {
+            goals('-V -f pom.xml clean install -DskipTests')
+            mavenInstallation('Maven')
+        }
+        maven {
+            goals('-V -f installers/pom.xml -V clean install -Pinstallers -Pdocker')
+            mavenInstallation('Maven')
+        }
+        shell ('''#!/bin/bash
+# Test installers (deb, rpm, bin) in various docker containers.
+set -e
+
+docker ps
+
+chmod +x installers/target/docker/run-tests.sh
+installers/target/docker/run-tests.sh
+
+docker ps
+''')
+    }
+}
+
 
 job('directory-studio-generated') {
     logRotator(-1, 100)
