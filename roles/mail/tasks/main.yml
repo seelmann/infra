@@ -1,0 +1,100 @@
+---
+
+- name: Install mail server packages
+  apt: name={{item}} state=present
+  with_items:
+    - postfix
+    - spamass-milter
+    - dovecot-imapd
+    - dovecot-ldap
+    - dovecot-sieve
+
+- name: Configure postfix
+  template:
+    src: '{{item.src}}'
+    dest: '{{item.dest}}'
+  with_items:
+    - { src: 'postfix/master.cf.j2', dest: '/etc/postfix/master.cf' }
+    - { src: 'postfix/main.cf.j2', dest: '/etc/postfix/main.cf' }
+    - { src: 'postfix/virtual.j2', dest: '/etc/postfix/virtual' }
+    - { src: 'postfix/virtual-mailbox-domains.j2', dest: '/etc/postfix/virtual-mailbox-domains' }
+    - { src: 'postfix/virtual-mailbox-users.j2', dest: '/etc/postfix/virtual-mailbox-users' }
+    - { src: 'aliases.j2', dest: '/etc/aliases' }
+    - { src: 'mailname.j2', dest: '/etc/mailname' }
+  notify:
+    - Restart postfix
+    - Run postmap
+
+- name: Configure spamassassin
+  template:
+    src: '{{item.src}}'
+    dest: '{{item.dest}}'
+  with_items:
+    - { src: 'default/spamass-milter.j2', dest: '/etc/default/spamass-milter' }
+    - { src: 'default/spamassassin.j2', dest: '/etc/default/spamassassin' }
+  notify:
+    - Restart spamassassin
+
+- name: Create /var/lib/spamassassin
+  file:
+    path: /var/lib/spamassassin
+    state: directory
+    mode: 0755
+    owner: debian-spamd
+    group: debian-spamd
+  notify:
+    - Restart spamassassin
+
+- name: Create /var/run/spamassassin
+  file:
+    path: /var/run/spamassassin
+    state: directory
+    mode: 0755
+    owner: debian-spamd
+    group: debian-spamd
+  notify:
+    - Restart spamassassin
+
+- name: Add user spamass-milter to debian-spamd group
+  user:
+    name: spamass-milter
+    groups: debian-spamd
+    append: yes
+  notify:
+    - Restart spamassassin
+
+- name: Configure dovecot
+  template:
+    src: '{{item.src}}'
+    dest: '{{item.dest}}'
+  with_items:
+    - { src: 'dovecot/dovecot.conf.j2', dest: '/etc/dovecot/dovecot.conf' }
+    - { src: 'dovecot/dovecot-ldap.conf.j2', dest: '/etc/dovecot/dovecot-ldap.conf' }
+  notify:
+    - Restart dovecot
+
+- name: Create vmail group
+  group:
+    name: vmail
+    gid: 5000
+
+- name: Create vmail user and /srv/vmail
+  user:
+    name: vmail
+    createhome: yes
+    shell: /bin/false
+    home: /srv/vmail
+    uid: 5000
+    group: vmail
+     
+- name: Enable mail services
+  service:
+    name: '{{item}}'
+    enabled: yes
+    state: started
+  with_items:
+    - postfix
+    - dovecot
+    - spamass-milter
+    - spamassassin
+

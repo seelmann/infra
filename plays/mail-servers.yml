@@ -1,0 +1,7 @@
+---
+- hosts: mail-servers
+  roles:
+    #- role: firewall
+    #- role: letsencrypt
+    - role: mail
+

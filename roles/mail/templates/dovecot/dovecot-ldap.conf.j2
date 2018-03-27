@@ -1,0 +1,8 @@
+uris = ldap://{{ldap.fqdn}}
+tls = yes
+auth_bind = yes
+base = {{ldap.baseDN}}
+scope = subtree
+pass_attrs = mail=user
+pass_filter = (&(objectClass=inetOrgPerson)(businessCategory=mail)(uid=%u))
+

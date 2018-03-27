@@ -1,0 +1,23 @@
+---
+
+- name: Restart postfix
+  service:
+    name: postfix
+    state: restarted
+
+- name: Run postmap
+  shell: postmap /etc/postfix/virtual && postmap /etc/postfix/virtual-mailbox-domains && postmap /etc/postfix/virtual-mailbox-users && postmap /etc/aliases
+
+- name: Restart spamassassin
+  service:
+    name: '{{item}}'
+    state: restarted
+  with_items:
+    - spamass-milter
+    - spamassassin
+
+- name: Restart dovecot
+  service:
+    name: dovecot
+    state: restarted
+

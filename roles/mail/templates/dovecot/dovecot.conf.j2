@@ -1,0 +1,73 @@
+# 2.1.7: dovecot.conf.dc12
+# OS: Linux 3.2.0-4-amd64 x86_64 Debian wheezy/sid ext4
+auth_verbose = yes
+listen = *
+log_timestamp = "%Y-%m-%d %H:%M:%S "
+mail_location = maildir:/srv/vmail/%d/%n:LAYOUT=fs
+mail_privileged_group = mail
+namespace {
+  hidden = no
+  inbox = yes
+  list = yes
+  location = maildir:/srv/vmail/%d/%n:INBOX=/srv/vmail/%d/%n/INBOX:LAYOUT=fs
+  prefix = 
+  separator = /
+  subscriptions = yes
+  type = private
+}
+namespace {
+  hidden = no
+  inbox = no
+  list = yes
+  location = virtual:/srv/vmail/%d/%n/virtual:INDEX=MEMORY
+  prefix = virtual/
+  separator = /
+  subscriptions = yes
+  type = private
+}
+passdb {
+  args = /etc/dovecot/dovecot-ldap.conf
+  driver = ldap
+}
+plugin {
+  sieve = /srv/vmail/%d/%n/dovecot.sieve
+}
+protocols = imap
+service auth {
+  unix_listener /var/spool/postfix/private/auth {
+    group = postfix
+    mode = 0660
+    user = postfix
+  }
+  unix_listener auth-master {
+    mode = 0600
+    user = vmail
+  }
+  user = root
+}
+service imap {
+  vsz_limit = 512 M
+}
+service pop3 {
+  vsz_limit = 512 M
+}
+ssl = required
+ssl_cert = </etc/ssl/certs/{{fqdn}}.crt
+ssl_key = </etc/ssl/private/{{fqdn}}.key
+userdb {
+  args = uid=5000 gid=5000 home=/srv/vmail/%d/%n allow_all_users=yes
+  driver = static
+}
+protocol imap {
+  imap_client_workarounds = tb-extra-mailbox-sep
+  mail_plugins = virtual
+}
+protocol pop3 {
+  pop3_uidl_format = %08Xu%08Xv
+}
+protocol lda {
+  auth_socket_path = /var/run/dovecot/auth-master
+  log_path = 
+  mail_plugins = sieve virtual
+  postmaster_address = postmaster@{{fqdn}}
+}
