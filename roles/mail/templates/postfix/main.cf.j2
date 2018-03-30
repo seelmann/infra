@@ -22,15 +22,23 @@ readme_directory = no
 compatibility_level = 2
 
 # TLS parameters
+smtpd_tls_security_level = may
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtpd_tls_session_cache_timeout = 3600s
 smtpd_tls_cert_file=/etc/ssl/certs/{{fqdn}}.crt
 smtpd_tls_key_file=/etc/ssl/private/{{fqdn}}.key
-smtpd_use_tls=yes
-smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
 smtpd_tls_auth_only = yes
 smtpd_sasl_auth_enable = yes
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
+
+smtp_tls_security_level = may
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_session_cache_timeout = 3600s
+smtp_tls_loglevel = 1
+smtp_tls_note_starttls_offer = yes
 
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
 # information on enabling SSL in the smtp client.
