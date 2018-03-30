@@ -29,9 +29,15 @@
     key: '{{network.ipv6.address}} {{host_public_key.content | b64decode}}'
   delegate_to: '{{backup.master}}'
 
+- name: Allow execution of rsync
+  set_fact:
+    allow_rsync_and_scripts: '/usr/bin/rsync'
+  when: backup.scripts is not defined
+
 - name: Allow execution of rsync and scripts
   set_fact:
     allow_rsync_and_scripts: '/usr/bin/rsync,{{  backup.scripts | map(attribute="script") | join(",")}}'
+  when: backup.scripts is defined
 
 - name: Allow execution of rsync and scripts
   lineinfile:
