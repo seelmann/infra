@@ -9,6 +9,9 @@
   ErrorLog ${APACHE_LOG_DIR}/{{fqdn}}.error.log
   CustomLog ${APACHE_LOG_DIR}/{{fqdn}}.access.log combined-remoteip
   ForensicLog ${APACHE_LOG_DIR}/{{fqdn}}.forensic.log
+{% if apache.docroot is defined %}
+  DocumentRoot {{apache.docroot}}
+{% endif %}
 
   RemoteIPHeader X-Forwarded-For
   RemoteIPInternalProxy {{hostvars[ipv4gw]['network']['ipv6']['address']}}
@@ -47,6 +50,10 @@
     #ProxyPreserveHost On
     ProxyPass http://localhost:{{apache.pass_to_port}}/
     ProxyPassReverse http://localhost:{{apache.pass_to_port}}/
+{% endif %}
+
+{% if apache.docroot is defined %}
+    Options Indexes FollowSymLinks Multiviews
 {% endif %}
   </Location>
 

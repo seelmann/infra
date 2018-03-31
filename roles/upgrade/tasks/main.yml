@@ -4,7 +4,8 @@
   copy: src=sources.list dest=/etc/apt/sources.list
 
 - name: Update apt cache
-  apt: update_cache=yes cache_valid_time=3600
+  apt: update_cache=yes
+  #apt: update_cache=yes #cache_valid_time=3600
   #shell: apt-get update
 
 - name: Get packages to upgrade

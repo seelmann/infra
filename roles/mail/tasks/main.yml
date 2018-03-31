@@ -8,6 +8,7 @@
     - dovecot-imapd
     - dovecot-ldap
     - dovecot-sieve
+    - vim
 
 - name: Configure postfix
   template:
