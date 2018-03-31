@@ -36,6 +36,44 @@ server {
   }
   #rewrite      ^ https://$server_name$request_uri?;
 }
-
+{% if 'fqdn_aliases' in item %}
+{% for fqdn_alias in item.fqdn_aliases %}
+server {
+  listen                  443;
+  server_name             {{fqdn_alias}};
+  server_name_in_redirect off;
+  ssl                     on;
+  ssl_certificate         /var/lib/lxc/{{item.inventory_hostname}}/rootfs/etc/ssl/certs/{{fqdn_alias}}.crt;
+  ssl_certificate_key     /var/lib/lxc/{{item.inventory_hostname}}/rootfs/etc/ssl/private/{{fqdn_alias}}.key;
+  access_log              /var/log/nginx/{{fqdn_alias}}.access.log;
+  error_log               /var/log/nginx/{{fqdn_alias}}.error.log;
+  location / {
+    proxy_pass            https://[{{item.network.ipv6.address}}]/;
+    proxy_set_header      X-Real-IP       $remote_addr;
+    proxy_set_header      Host            $host;
+    proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}
+server {
+  listen                  80;
+  server_name             {{fqdn_alias}};
+  access_log              /var/log/nginx/{{fqdn_alias}}.access.log;
+  error_log               /var/log/nginx/{{fqdn_alias}}.error.log;
+  location /nginx_status {
+    stub_status on;
+    access_log   off;
+    allow 127.0.0.1;
+    deny all;
+  }
+  location / {
+    proxy_pass            http://[{{item.network.ipv6.address}}]/;
+    proxy_set_header      X-Real-IP       $remote_addr;
+    proxy_set_header      Host            $host;
+    proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  #rewrite      ^ https://$server_name$request_uri?;
+}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
