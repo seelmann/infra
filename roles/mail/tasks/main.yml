@@ -89,7 +89,7 @@
     group: vmail
      
 - name: Enable mail services
-  service:
+  systemd:
     name: '{{item}}'
     enabled: yes
     state: started
