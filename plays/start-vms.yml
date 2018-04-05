@@ -1,7 +1,0 @@
----
-
-- hosts: kvm-guests
-  gather_facts: False
-  roles:
-    - role: start-vm
-

@@ -1,9 +1,0 @@
----
-- hosts: request-tracker
-  roles:
-    - role: firewall
-    - role: ipv4gw-ssl
-    - role: apache-ssl-ldap
-    - role: request-tracker
-    - role: backup
-

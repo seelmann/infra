@@ -1,7 +1,0 @@
----
-- hosts: dev-servers
-  roles:
-    - role: useful-packages
-    - role: devtools
-    - role: users
-

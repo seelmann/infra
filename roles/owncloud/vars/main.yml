@@ -1,4 +1,0 @@
----
-
-occ: cd /var/www/owncloud/ && sudo -u www-data php occ
-
