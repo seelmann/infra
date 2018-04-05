@@ -20,6 +20,14 @@
     - iceweasel
     - rpm
 
+- name: Limit heap
+  lineinfile:
+    path: /etc/default/jenkins
+    state: present
+    regexp: '^JAVA_ARGS='
+    line: 'JAVA_ARGS="-Xmx512m -Djava.awt.headless=true"'
+  notify: Restart jenkins
+
 - name: Copy config
   copy:
     src: "{{item}}"
