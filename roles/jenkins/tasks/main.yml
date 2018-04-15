@@ -79,7 +79,11 @@
     - ws-cleanup
     - maven-plugin
     - metrics
+    - build-timeout
   notify: Restart jenkins
+
+- name: Update Jenkins plugins
+  shell: "java -jar /tmp/jenkins-cli.jar -s http://localhost:8080/ list-plugins | cut -d' ' -f1 | xargs java -jar /tmp/jenkins-cli.jar -s http://localhost:8080/ install-plugin"
 
 - name: Enable tmpfs
   service:

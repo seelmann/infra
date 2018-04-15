@@ -6,7 +6,7 @@
     <isSetupComplete>true</isSetupComplete>
     <name>RESTART</name>
   </installState>
-  <numExecutors>4</numExecutors>
+  <numExecutors>1</numExecutors>
   <mode>NORMAL</mode>
   <useSecurity>true</useSecurity>
   <authorizationStrategy class="hudson.security.AuthorizationStrategy$Unsecured"/>

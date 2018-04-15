@@ -6,6 +6,11 @@ mavenJob('directory-ldap-api-generated') {
     triggers {
         cron('@daily')
     }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
+    }
     rootPOM('pom.xml')
     goals('-V clean install')
 }
@@ -18,6 +23,11 @@ mavenJob('directory-server-generated') {
     triggers {
         cron('@daily')
     }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
+    }
     rootPOM('pom.xml')
     goals('-V clean install -Dtest="!ClientAddRequestTest,!OperationWithIndexTest,!*PerfIT,!ReferralIT,!TestUtils" -DfailIfNoTests=false')
 }
@@ -29,6 +39,11 @@ job('directory-server-installers-docker-generated') {
     }
     triggers {
         cron('@daily')
+    }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
     }
     steps {
         maven {
@@ -66,6 +81,9 @@ job('directory-studio-generated') {
         xvfb('default') {
             screen('1024x768x24')
         }
+        timeout {
+            absolute(60)
+        }
     }
     steps {
         maven {
@@ -93,6 +111,11 @@ mavenJob('directory-mavibot-generated') {
     triggers {
         cron('@daily')
     }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
+    }
     rootPOM('pom.xml')
     goals('-V clean install')
 }
@@ -104,6 +127,11 @@ mavenJob('directory-kerby-generated') {
     }
     triggers {
         cron('@daily')
+    }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
     }
     rootPOM('pom.xml')
     goals('-V clean install')
@@ -117,6 +145,11 @@ mavenJob('directory-fortress-core-generated') {
     triggers {
         cron('@daily')
     }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
+    }
     rootPOM('pom.xml')
     goals('-V clean install')
 }
@@ -128,6 +161,11 @@ mavenJob('directory-fortress-realm-generated') {
     }
     triggers {
         cron('@daily')
+    }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
     }
     rootPOM('pom.xml')
     goals('-V clean install')
@@ -141,6 +179,11 @@ mavenJob('directory-fortress-rest-generated') {
     triggers {
         cron('@daily')
     }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
+    }
     rootPOM('pom.xml')
     goals('-V clean install')
 }
@@ -152,6 +195,11 @@ mavenJob('directory-fortress-web-generated') {
     }
     triggers {
         cron('@daily')
+    }
+    wrappers {
+        timeout {
+            absolute(60)
+        }
     }
     rootPOM('pom.xml')
     goals('-V clean install')
