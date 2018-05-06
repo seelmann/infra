@@ -1,0 +1,41 @@
+---
+
+- name: Create jupyter user
+  user:
+    name: jupyter
+    createhome: yes
+    shell: /bin/bash
+
+- name: Create jupyter work directory
+  file:
+    path: /home/jupyter/work
+    state: directory
+    mode: 0755
+    owner: jupyter
+    group: jupyter
+
+- name: Get uid and gid of jupyter user
+  getent:
+    database: passwd
+    key: jupyter
+    split: ":"
+
+- name: Pull Jupyter docker image
+  docker_image:
+    name: jupyter/scipy-notebook:1dc1481636a2
+
+- name: Run Juptyer docker container
+  docker_container:
+    name: jupyter
+    image: jupyter/scipy-notebook:1dc1481636a2
+    ports:
+      - 127.0.0.1:8888:8888
+    volumes:
+      - /home/jupyter/work:/home/jovyan/work
+    user: root
+    env:
+      NB_UID: "{{getent_passwd['jupyter'][1]}}"
+      NB_GID: "{{getent_passwd['jupyter'][2]}}"
+    command: start-notebook.sh --NotebookApp.token=''
+    restart_policy: always
+ 

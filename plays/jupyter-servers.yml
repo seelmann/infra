@@ -1,0 +1,9 @@
+---
+- hosts: jupyter-servers
+  roles:
+    - role: firewall
+    - role: letsencrypt
+    - role: apache-ssl-ldap
+    - role: docker-ce
+    - role: jupyter
+

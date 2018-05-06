@@ -13,8 +13,10 @@
   DocumentRoot {{apache.docroot}}
 {% endif %}
 
+{% if ipv4gw is defined %}
   RemoteIPHeader X-Forwarded-For
   RemoteIPInternalProxy {{hostvars[ipv4gw]['network']['ipv6']['address']}}
+{% endif %}
 
   SSLEngine on
   SSLCertificateFile /etc/ssl/certs/{{fqdn}}.crt
@@ -30,13 +32,25 @@
 {% endfor %}
 {% endif %}
 
+{% if apache.pass_to_port is defined %}
+  RewriteEngine On
+  RewriteCond %{HTTP:Connection} Upgrade [NC]
+  RewriteCond %{HTTP:Upgrade} websocket [NC]
+  RewriteRule /(.*) ws://localhost:{{apache.pass_to_port}}/$1 [P,L]
+{% endif %}
+
   <Location />
     SSLRequireSSL
 
     AuthType Basic
+{% if apache.htpasswd is defined %}
+    AuthName "FILE"
+    AuthUserFile /etc/apache2/htpasswd
+{% else %}
     AuthName "LDAP"
     AuthBasicProvider ldap
     AuthLDAPURL "ldap://{{ldap.fqdn}}:389/{{ldap.baseDN}}?uid?sub?(objectClass=inetOrgPerson)" STARTTLS
+{% endif %}
 
 {% if apache.noauths is defined %}
 {% for item in apache.noauths %}
@@ -75,8 +89,10 @@
   CustomLog ${APACHE_LOG_DIR}/{{fqdn}}.access.log combined-remoteip
   ForensicLog ${APACHE_LOG_DIR}/{{fqdn}}.forensic.log
 
+{% if ipv4gw is defined %}
   RemoteIPHeader X-Forwarded-For
   RemoteIPInternalProxy {{hostvars[ipv4gw]['network']['ipv6']['address']}}
+{% endif %}
 
   Redirect 302 / https://{{fqdn}}/
 </VirtualHost>
@@ -92,8 +108,10 @@
   CustomLog ${APACHE_LOG_DIR}/{{item}}.access.log combined-remoteip
   ForensicLog ${APACHE_LOG_DIR}/{{item}}.forensic.log
 
+{% if ipv4gw is defined %}
   RemoteIPHeader X-Forwarded-For
   RemoteIPInternalProxy {{hostvars[ipv4gw]['network']['ipv6']['address']}}
+{% endif %}
 
   SSLEngine on
   SSLCertificateFile /etc/ssl/certs/{{item}}.crt
@@ -115,8 +133,10 @@
   CustomLog ${APACHE_LOG_DIR}/{{item}}.access.log combined-remoteip
   ForensicLog ${APACHE_LOG_DIR}/{{item}}.forensic.log
 
+{% if ipv4gw is defined %}
   RemoteIPHeader X-Forwarded-For
   RemoteIPInternalProxy {{hostvars[ipv4gw]['network']['ipv6']['address']}}
+{% endif %}
 
   Redirect 302 / https://{{fqdn}}/
 </VirtualHost>

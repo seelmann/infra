@@ -13,7 +13,7 @@
   delegate_to: "{{param_delegate_to}}"
 
 - name: Install packages required by ansible in chroot
-  command: chroot {{param_rootfs}} /bin/bash -c "apt-get update -qq && apt-get install -yqq openssh-server sudo python python-apt"
+  command: chroot {{param_rootfs}} /bin/bash -c "apt-get update -qq && apt-get install -yqq openssh-server sudo python python-apt python-passlib"
   delegate_to: "{{param_delegate_to}}"
 
 - name: Check if admin user exists

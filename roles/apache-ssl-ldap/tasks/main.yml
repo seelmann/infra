@@ -26,7 +26,19 @@
     - log_forensic
     - proxy
     - proxy_http
+    - proxy_wstunnel
     - headers
+    - rewrite
+
+- name: Create htpasswd
+  htpasswd:
+    path: /etc/apache2/htpasswd
+    name: "{{apache.htpasswd.user}}"
+    password: "{{apache.htpasswd.password}}"
+    owner: root
+    group: www-data
+    mode: 0640
+  when: apache.htpasswd is defined
 
 - name: Copy Apache site config
   template:
