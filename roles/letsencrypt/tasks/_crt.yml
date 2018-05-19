@@ -9,6 +9,11 @@
 - name: Copy Simple HTTP server
   copy: src=server.py dest={{letsencrypt_work_dir}}
 
+- name: Stop Apache
+  service: name=apache2 state=stopped
+  when: apache is defined
+  ignore_errors: yes
+
 - name: Run Simple HTTP server
   shell: "cd {{letsencrypt_webroot_dir}} && python3 {{letsencrypt_work_dir}}/server.py"
   async: 60
@@ -41,4 +46,8 @@
 - name: Kill Simple HTTP server
   shell: pkill -f "python3 {{letsencrypt_work_dir}}/server.py"
   failed_when: False
+
+- name: Start Apache
+  service: name=apache2 state=started
+  when: apache is defined
 
