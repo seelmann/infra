@@ -36,16 +36,6 @@
   notify:
     - Restart spamassassin
 
-- name: Create /var/lib/spamassassin
-  file:
-    path: /var/lib/spamassassin
-    state: directory
-    mode: 0755
-    owner: debian-spamd
-    group: debian-spamd
-  notify:
-    - Restart spamassassin
-
 - name: Create /var/run/spamassassin
   file:
     path: /var/run/spamassassin

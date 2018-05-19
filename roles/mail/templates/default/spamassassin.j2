@@ -19,10 +19,11 @@ ENABLED=0
 
 #OPTIONS="--create-prefs --max-children 5 --helper-home-dir"
 SAHOME="/var/lib/spamassassin"
-#if [ ! -d "/var/run/spamassassin" ]; then
-#    mkdir /var/run/spamassassin
-#    chmod 755 /var/run/spamassassin
-#fi
+if [ ! -d "/var/run/spamassassin" ]; then
+    mkdir /var/run/spamassassin
+    chmod 755 /var/run/spamassassin
+    chown debian-spamd:debian-spamd /var/run/spamassassin
+fi
 OPTIONS="--username debian-spamd --nouser-config --max-children 5 --helper-home-dir ${SAHOME} --socketpath=/var/run/spamassassin/spamd.sock --socketowner=debian-spamd --socketgroup=debian-spamd --socketmode=0660"
 
 # Pid file
