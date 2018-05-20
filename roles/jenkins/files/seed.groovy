@@ -205,3 +205,18 @@ mavenJob('directory-fortress-web-generated') {
     goals('-V clean install')
 }
 
+job('clean-m2-repository-generated') {
+    logRotator(-1, 100)
+    wrappers {
+        timeout {
+            absolute(60)
+        }
+    }
+    steps {
+        shell ('''#!/bin/bash
+set -e
+#rm -rf ~/.m2/repository
+rm -rf ~/.m2/repository/p2/osgi/bundle/org.apache.directory.*
+''')
+    }
+}
