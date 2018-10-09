@@ -80,6 +80,8 @@
     - maven-plugin
     - metrics
     - build-timeout
+    - pipeline-model-definition
+    - pipeline-maven
   notify: Restart jenkins
 
 - name: Update Jenkins plugins
