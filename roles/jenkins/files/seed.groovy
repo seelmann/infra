@@ -1,5 +1,5 @@
 mavenJob('directory-ldap-api-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-ldap-api', 'master')
     }
@@ -16,7 +16,7 @@ mavenJob('directory-ldap-api-generated') {
 }
 
 mavenJob('directory-server-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-server', 'master')
     }
@@ -33,7 +33,7 @@ mavenJob('directory-server-generated') {
 }
 
 job('directory-server-installers-docker-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-server', 'master')
     }
@@ -70,7 +70,7 @@ docker ps
 
 
 job('directory-studio-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-studio', 'master')
     }
@@ -104,7 +104,7 @@ job('directory-studio-generated') {
 }
 
 mavenJob('directory-mavibot-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-mavibot', 'master')
     }
@@ -121,7 +121,7 @@ mavenJob('directory-mavibot-generated') {
 }
 
 mavenJob('directory-kerby-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-kerby', 'trunk')
     }
@@ -138,7 +138,7 @@ mavenJob('directory-kerby-generated') {
 }
 
 mavenJob('directory-fortress-core-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-fortress-core', 'master')
     }
@@ -155,7 +155,7 @@ mavenJob('directory-fortress-core-generated') {
 }
 
 mavenJob('directory-fortress-realm-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-fortress-realm', 'master')
     }
@@ -172,7 +172,7 @@ mavenJob('directory-fortress-realm-generated') {
 }
 
 mavenJob('directory-fortress-rest-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-fortress-enmasse', 'master')
     }
@@ -189,7 +189,7 @@ mavenJob('directory-fortress-rest-generated') {
 }
 
 mavenJob('directory-fortress-web-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     scm {
         github('apache/directory-fortress-commander', 'master')
     }
@@ -206,7 +206,7 @@ mavenJob('directory-fortress-web-generated') {
 }
 
 job('clean-m2-repository-generated') {
-    logRotator(-1, 100)
+    logRotator(-1, 3)
     wrappers {
         timeout {
             absolute(60)
