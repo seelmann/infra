@@ -13,6 +13,7 @@ mavenJob('directory-ldap-api-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install')
+    archivingDisabled(true)
 }
 
 mavenJob('directory-server-generated') {
@@ -30,6 +31,7 @@ mavenJob('directory-server-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install -Dtest="!ClientAddRequestTest,!OperationWithIndexTest,!*PerfIT,!ReferralIT,!TestUtils" -DfailIfNoTests=false')
+    archivingDisabled(true)
 }
 
 job('directory-server-installers-docker-generated') {
@@ -118,6 +120,7 @@ mavenJob('directory-mavibot-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install')
+    archivingDisabled(true)
 }
 
 mavenJob('directory-kerby-generated') {
@@ -135,6 +138,7 @@ mavenJob('directory-kerby-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install')
+    archivingDisabled(true)
 }
 
 mavenJob('directory-fortress-core-generated') {
@@ -152,6 +156,7 @@ mavenJob('directory-fortress-core-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install')
+    archivingDisabled(true)
 }
 
 mavenJob('directory-fortress-realm-generated') {
@@ -169,6 +174,7 @@ mavenJob('directory-fortress-realm-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install')
+    archivingDisabled(true)
 }
 
 mavenJob('directory-fortress-rest-generated') {
@@ -186,6 +192,7 @@ mavenJob('directory-fortress-rest-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install')
+    archivingDisabled(true)
 }
 
 mavenJob('directory-fortress-web-generated') {
@@ -203,6 +210,7 @@ mavenJob('directory-fortress-web-generated') {
     }
     rootPOM('pom.xml')
     goals('-V clean install')
+    archivingDisabled(true)
 }
 
 job('clean-m2-repository-generated') {
