@@ -1,4 +1,4 @@
-mavenJob('directory-ldap-api-generated') {
+job('directory-ldap-api') {
     logRotator(-1, 3)
     scm {
         github('apache/directory-ldap-api', 'master')
@@ -11,15 +11,30 @@ mavenJob('directory-ldap-api-generated') {
             absolute(60)
         }
     }
-    rootPOM('pom.xml')
-    goals('-V clean install')
-    archivingDisabled(true)
+    steps {
+        shell ('''#!/bin/bash
+docker pull apachedirectory/maven-build:jdk-11
+docker run -i --rm \
+    -u $(id -u):$(id -g) \
+    -v ~/.m2:/home/user/.m2 \
+    -v $(pwd):/home/user/project \
+    apachedirectory/maven-build:jdk-11
+''')
+        shell ('''#!/bin/bash
+docker pull apachedirectory/maven-build:jdk-8
+docker run -i --rm \
+    -u $(id -u):$(id -g) \
+    -v ~/.m2:/home/user/.m2 \
+    -v $(pwd):/home/user/project \
+    apachedirectory/maven-build:jdk-8
+''')
+    }
     publishers {
         wsCleanup()
     }
 }
 
-mavenJob('directory-server-generated') {
+job('directory-server') {
     logRotator(-1, 3)
     scm {
         github('apache/directory-server', 'master')
@@ -32,9 +47,24 @@ mavenJob('directory-server-generated') {
             absolute(60)
         }
     }
-    rootPOM('pom.xml')
-    goals('-V clean install -Dtest="!ClientAddRequestTest,!OperationWithIndexTest,!*PerfIT,!ReferralIT,!TestUtils" -DfailIfNoTests=false')
-    archivingDisabled(true)
+    steps {
+        shell ('''#!/bin/bash
+docker pull apachedirectory/maven-build:jdk-11
+docker run -i --rm \
+    -u $(id -u):$(id -g) \
+    -v ~/.m2:/home/user/.m2 \
+    -v $(pwd):/home/user/project \
+    apachedirectory/maven-build:jdk-11
+''')
+        shell ('''#!/bin/bash
+docker pull apachedirectory/maven-build:jdk-8
+docker run -i --rm \
+    -u $(id -u):$(id -g) \
+    -v ~/.m2:/home/user/.m2 \
+    -v $(pwd):/home/user/project \
+    apachedirectory/maven-build:jdk-8
+''')
+    }
     publishers {
         wsCleanup()
     }
@@ -80,7 +110,7 @@ docker ps
 }
 
 
-job('directory-studio-generated') {
+job('directory-studio') {
     logRotator(-1, 3)
     scm {
         github('apache/directory-studio', 'master')
@@ -89,28 +119,30 @@ job('directory-studio-generated') {
         cron('@daily')
     }
     wrappers {
-        xvfb('default') {
-            screen('1024x768x24')
-        }
         timeout {
             absolute(60)
         }
     }
     steps {
-        maven {
-            goals('-V -f pom-first.xml clean install')
-            mavenInstallation('Maven')
-        }
-        maven {
-            goals('-V -Denable-ui-tests -pl !product clean install')
-            mavenInstallation('Maven')
-        }
+        shell ('''#!/bin/bash
+docker pull apachedirectory/studio-build:jdk-11
+docker run -i --rm \
+    -u $(id -u):$(id -g) \
+    -v ~/.m2:/home/hnelson/.m2 \
+    -v $(pwd):/home/hnelson/studio \
+    apachedirectory/studio-build:jdk-11
+''')
+        shell ('''#!/bin/bash
+docker pull apachedirectory/studio-build:jdk-8
+docker run -i --rm \
+    -u $(id -u):$(id -g) \
+    -v ~/.m2:/home/hnelson/.m2 \
+    -v $(pwd):/home/hnelson/studio \
+    apachedirectory/studio-build:jdk-8
+''')
     }
     publishers {
-        wsCleanup {
-            includePattern('product/target/products/**')
-            deleteDirectories(true)
-        }
+        wsCleanup()
     }
 }
 
