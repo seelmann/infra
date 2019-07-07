@@ -10,14 +10,9 @@
     letsencrypt_crt_file: /etc/ssl/certs/{{letsencrypt_domain}}.crt
     
 - name: Install packages
-  apt: name={{package_name}} state=present
-  with_items:
-    - python
-    - openssl
-    - ca-certificates
-    - ssl-cert
-  loop_control:
-    loop_var: package_name
+  apt:
+    name: ['python', 'openssl', 'ca-certificates', 'ssl-cert']
+    state: present
 
 - name: Check certificate status
   stat: path={{letsencrypt_crt_file}} 

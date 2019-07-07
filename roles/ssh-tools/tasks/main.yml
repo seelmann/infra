@@ -1,11 +1,11 @@
 ---
 
 - import_tasks: _down.yml
-  when: down
+  when: down|bool
 
 - import_tasks: _clean.yml
-  when: clean
+  when: clean|bool
 
 - import_tasks: _up.yml
-  when: up
+  when: up|bool
 

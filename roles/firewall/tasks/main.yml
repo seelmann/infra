@@ -1,9 +1,9 @@
 ---
 
 - name: Install ufw
-  apt: name={{item}} state=present
-  with_items:
-    - ufw
+  apt:
+    name: ['ufw']
+    state: present
 
 - name: Allow ssh traffic
   ufw: rule=limit port=ssh proto=tcp

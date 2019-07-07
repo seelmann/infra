@@ -1,11 +1,9 @@
 ---
 
 - name: Install packages
-  apt: name={{item}} state=present
-  with_items:
-    - openssl
-    - ca-certificates
-    - nginx
+  apt:
+    name: ['openssl', 'ca-certificates', 'nginx']
+    state: present
 
 - name: Copy nginx unit file
   copy:
@@ -37,4 +35,7 @@
     state: link
   notify:
     - Restart nginx
+
+- name: Restart nginx
+  service: name=nginx state=restarted
 
