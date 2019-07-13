@@ -1,4 +1,0 @@
-#!/bin/bash
-/usr/bin/msmtp -t -C /etc/request-tracker4/msmtp_wrapper.conf
-/usr/bin/logger -t RTmailer -p syslog.info -- CALL /usr/bin/msmtp -t RETURNED $?
-
