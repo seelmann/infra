@@ -1,11 +1,9 @@
 ---
 
 - name: Install LXC dependencies
-  apt: name={{item}} state=present
-  with_items:
-    - lxc
-    - bridge-utils
-    - debootstrap
+  apt:
+    name: ['lxc', 'bridge-utils', 'debootstrap']
+    state: present
 
 - name: Disable LXC service
   service:

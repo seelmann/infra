@@ -1,9 +1,9 @@
 ---
 
 - name: Install CIFS packages
-  apt: name={{item}} state=present
-  with_items:
-    - cifs-utils
+  apt:
+    name: ['cifs-utils']
+    state: present
 
 - name: Mount via CIFS
   mount:

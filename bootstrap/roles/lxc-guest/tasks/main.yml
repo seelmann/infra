@@ -1,9 +1,9 @@
 ---
 
 - name: Install rsyslog
-  apt: name={{item}} state=present
-  with_items:
-    - rsyslog
+  apt:
+    name: ['rsyslog']
+    state: present
 
 - name: Configure rsyslog for LXC guest
   lineinfile:
@@ -24,8 +24,8 @@
     - getty@tty6
 
 - name: Remove DHCP client
-  apt: name={{item}} state=absent purge=yes
-  with_items:
-    - isc-dhcp-client
-    - isc-dhcp-common
+  apt:
+    name: ['isc-dhcp-client', 'isc-dhcp-common']
+    state: absent
+    purge: yes
 

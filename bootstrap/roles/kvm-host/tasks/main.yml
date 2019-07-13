@@ -1,12 +1,9 @@
 ---
 
 - name: Install KVM dependencies
-  apt: name={{item}} state=present
-  with_items:
-    - qemu-kvm
-    - libvirt-bin
-    - bridge-utils
-    - debootstrap
+  apt:
+    name: ['qemu-kvm', 'libvirt-bin', 'bridge-utils', 'debootstrap']
+    state: present
 
 - name: Install virtinst (without GUI stuff)
   apt: name=virtinst install_recommends=no state=present

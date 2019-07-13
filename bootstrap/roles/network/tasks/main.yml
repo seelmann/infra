@@ -1,9 +1,9 @@
 ---
 
 - name: Install network dependencies
-  apt: name={{item}} state=present
-  with_items:
-    - bridge-utils
+  apt:
+    name: ['bridge-utils']
+    state: present
   when: network.br0 is defined
 
 - name: Copy /etc/resolv.conf
@@ -72,9 +72,9 @@
   when: network.br0 is defined
 
 - name: Install dependencies to set hostname
-  apt: name={{item}} state=present
-  with_items:
-    - dbus
+  apt:
+    name: ['dbus']
+    state: present
 
 - name: Set Hostname
   hostname: name="{{inventory_hostname}}"

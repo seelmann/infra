@@ -1,10 +1,9 @@
 ---
 
 - name: Install cryptsetup packages
-  apt: name={{item}} state=present
-  with_items:
-    - dmsetup
-    - cryptsetup
+  apt:
+    name: ['dmsetup', 'cryptsetup']
+    state: present
 
 # TODO: implement lvm
 

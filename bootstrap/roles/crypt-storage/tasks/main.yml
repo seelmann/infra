@@ -1,11 +1,9 @@
 ---
 
 - name: Install cryptsetup packages
-  apt: name={{item}} state=present
-  with_items:
-    - dmsetup
-    - cryptsetup
-    - lvm2
+  apt:
+    name: ['dmsetup', 'cryptsetup', 'lvm2']
+    state: present
 
 - name: Create volume for crypt
   lvol: vg={{crypt_dev_vg}} lv={{crypt_dev_lv}} size={{crypt_dev_size}} state=present
