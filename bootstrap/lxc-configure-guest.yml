@@ -1,6 +1,6 @@
 ---
 
-- hosts: lxc-guests,lxc2-guests
+- hosts: lxc2-guests
   gather_facts: False
   roles:
     - role: assert-single-host
