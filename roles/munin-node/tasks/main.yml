@@ -1,9 +1,9 @@
 ---
 
 - name: Install packages
-  apt: name={{item}} state=present
-  with_items:
-    - munin-node
+  apt:
+    name: ['munin-node']
+    state: present
 
 - name: Copy munin-node config
   template:

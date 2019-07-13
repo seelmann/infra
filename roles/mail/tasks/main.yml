@@ -1,14 +1,9 @@
 ---
 
 - name: Install mail server packages
-  apt: name={{item}} state=present
-  with_items:
-    - postfix
-    - spamass-milter
-    - dovecot-imapd
-    - dovecot-ldap
-    - dovecot-sieve
-    - vim
+  apt:
+    name: ['postfix', 'spamass-milter', 'dovecot-imapd', 'dovecot-ldap', 'dovecot-sieve', 'vim']
+    state: present
 
 - name: Configure postfix
   template:

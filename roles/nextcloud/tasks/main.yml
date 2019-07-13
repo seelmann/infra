@@ -21,22 +21,9 @@
     mode: 0600
 
 - name: Install dependencies
-  apt: name={{item}}
-  with_items:
-    - apache2
-    - mariadb-server
-    - libapache2-mod-php7.0
-    - php7.0-gd
-    - php7.0-json
-    - php7.0-mysql
-    - php7.0-curl
-    - php7.0-mbstring
-    - php7.0-intl
-    - php7.0-mcrypt
-    - php-imagick
-    - php7.0-xml
-    - php7.0-zip
-    - php7.0-ldap
+  apt:
+    name: ['apache2', 'mariadb-server', 'libapache2-mod-php7.0', 'php7.0-gd', 'php7.0-json', 'php7.0-mysql', 'php7.0-curl', 'php7.0-mbstring', 'php7.0-intl', 'php7.0-mcrypt', 'php-imagick', 'php7.0-xml', 'php7.0-zip', 'php7.0-ldap']
+    state: present
 
 - name: Configure MariaDB login
   shell: mysql -e "GRANT ALL PRIVILEGES on *.* to 'root'@'localhost' IDENTIFIED BY '{{mysql_password}}';"

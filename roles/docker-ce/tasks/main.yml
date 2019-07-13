@@ -1,14 +1,9 @@
 ---
 
 - name: Install prerequisites
-  apt: name={{item}} state=present
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - software-properties-common
-    #- python3-docker
-    - python-docker
+  apt:
+    name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python-docker']
+    state: present
 
 - name: Add Docker apt repository key
   apt_key:

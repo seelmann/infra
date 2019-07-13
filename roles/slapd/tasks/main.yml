@@ -17,11 +17,9 @@
   no_log: True
 
 - name: Install OpenLDAP
-  apt: name={{item}} state=present
-  with_items:
-    - slapd
-    - ldap-utils
-    - ldapvi
+  apt:
+    name: ['slapd', 'ldap-utils', 'ldapvi']
+    state: present
 
 - name: Add OpenLDAP user to ssl-cert group
   user:

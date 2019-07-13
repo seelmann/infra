@@ -1,18 +1,7 @@
 ---
 
 - name: Install base packages
-  apt: name={{item}} state=present
-  with_items:
-    - python
-    - python-apt
-    - sudo
-    - vim
-    - tmux
-    - git
-    - tree
-    - wget
-    - curl
-    - traceroute
-    - iputils-ping
-    - aptitude
+  apt:
+    name: ['python', 'python-apt', 'sudo', 'vim', 'tmux', 'git', 'tree', 'wget', 'curl', 'traceroute', 'iputils-ping', 'aptitude']
+    state: present
 

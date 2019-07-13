@@ -1,11 +1,9 @@
 ---
 
 - name: Install packages
-  apt: name={{item}} state=present
-  with_items:
-    - libcgi-fast-perl
-    - libapache2-mod-fcgid
-    - munin
+  apt:
+    name: ['libcgi-fast-perl', 'libapache2-mod-fcgid', 'munin']
+    state: present
 
 - name: Enable modules
   apache2_module: name={{item}} state=present

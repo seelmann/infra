@@ -12,13 +12,9 @@
     update_cache: yes
 
 - name: Install Jenkins and Tools
-  apt: name={{item}} state=present
-  with_items:
-    - curl
-    - jenkins
-    - xvfb
-    - iceweasel
-    - rpm
+  apt:
+    name: ['curl', 'jenkins', 'xvfb', 'iceweasel', 'rpm']
+    state: present
 
 - name: Limit heap
   lineinfile:

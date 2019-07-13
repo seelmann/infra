@@ -1,17 +1,7 @@
 ---
 
 - name: Install devel packages
-  apt: name={{item}} state=present
-  with_items:
-    - python
-    - vim
-    - tmux
-    - git
-    - subversion
-    - maven
-    - htop
-    - iotop
-    - sysstat
-    - xvfb
-    - iceweasel
+  apt:
+    name: ['python', 'vim', 'tmux', 'git', 'subversion', 'maven', 'htop', 'iotop', ,'sysstat', 'xvfb', 'iceweasel']
+    state: present
 

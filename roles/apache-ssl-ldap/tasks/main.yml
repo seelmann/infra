@@ -1,11 +1,9 @@
 ---
 
 - name: Install packages
-  apt: name={{item}} state=present
-  with_items:
-    - openssl
-    - ca-certificates
-    - apache2
+  apt:
+    name: ['openssl', 'ca-certificates', 'apache2']
+    state: present
 
 - name: Disable default site
   shell: a2dissite 000-default | grep "already disabled"
