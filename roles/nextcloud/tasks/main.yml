@@ -12,7 +12,7 @@
   changed_when: False
   no_log: True
 
-- name: Allow root access to MySQL
+- name: Allow root access to MariaDB
   template:
     src: root.cnf.j2
     dest: /root/.my.cnf
@@ -22,25 +22,25 @@
 
 - name: Install dependencies
   apt:
-    name: ['apache2', 'mariadb-server', 'libapache2-mod-php7.0', 'php7.0-gd', 'php7.0-json', 'php7.0-mysql', 'php7.0-curl', 'php7.0-mbstring', 'php7.0-intl', 'php7.0-mcrypt', 'php-imagick', 'php7.0-xml', 'php7.0-zip', 'php7.0-ldap']
+    name: ['apache2', 'mariadb-server', 'libapache2-mod-php7.3', 'php7.3-gd', 'php7.3-json', 'php7.3-mysql', 'php7.3-curl', 'php7.3-mbstring', 'php7.3-intl', 'php-imagick', 'php7.3-xml', 'php7.3-zip', 'php7.3-ldap']
     state: present
 
 - name: Configure MariaDB login
   shell: mysql -e "GRANT ALL PRIVILEGES on *.* to 'root'@'localhost' IDENTIFIED BY '{{mysql_password}}';"
 
-- name: Download Nextcloud
-  get_url:
-    url: https://download.nextcloud.com/server/releases/nextcloud-12.0.5.tar.bz2
-    dest: /tmp/nextcloud.tar.bz2
-    checksum: sha512:6a07384fef1ca57e82c5867c7f4898b9dcc94bd99d25ea49cf44606833e0045f9503f2c9256b71845603bd7b911fdabea39e1bebe8cddb69d9d752c69101bc27
-
-- name: Install Nextcloud
-  unarchive:
-    src: /tmp/nextcloud.tar.bz2
-    dest: /var/www
-    remote_src: yes
-    owner: www-data
-    group: www-data
+#- name: Download Nextcloud
+#  get_url:
+#    url: https://download.nextcloud.com/server/releases/nextcloud-12.0.5.tar.bz2
+#    dest: /tmp/nextcloud.tar.bz2
+#    checksum: sha512:6a07384fef1ca57e82c5867c7f4898b9dcc94bd99d25ea49cf44606833e0045f9503f2c9256b71845603bd7b911fdabea39e1bebe8cddb69d9d752c69101bc27
+#
+#- name: Install Nextcloud
+#  unarchive:
+#    src: /tmp/nextcloud.tar.bz2
+#    dest: /var/www
+#    remote_src: yes
+#    owner: www-data
+#    group: www-data
 
 - name: Copy Apache Nextcloud config
   template:
@@ -70,16 +70,15 @@
   notify:
     - Restart apache2
 
-
-- name: Check if Nextcloud is set up
-  shell: "{{occ}} status | grep 'installed. true'"
-  register: installed_result
-  failed_when: installed_result.rc != 0 and installed_result.rc != 1
-  changed_when: installed_result.rc == 1
-
-- name: Setup Nextcloud
-  shell: "{{occ}} maintenance:install --database 'mysql' --database-name 'nextcloud' --database-user 'root' --database-pass '{{mysql_password}}' --admin-user 'ncadmin' --admin-pass '{{nextcloud_password}}'"
-  when: installed_result.rc == 1
+#- name: Check if Nextcloud is set up
+#  shell: "{{occ}} status | grep 'installed. true'"
+#  register: installed_result
+#  failed_when: installed_result.rc != 0 and installed_result.rc != 1
+#  changed_when: installed_result.rc == 1
+#
+#- name: Setup Nextcloud
+#  shell: "{{occ}} maintenance:install --database 'mysql' --database-name 'nextcloud' --database-user 'root' --database-pass '{{mysql_password}}' --admin-user 'ncadmin' --admin-pass '{{nextcloud_password}}'"
+#  when: installed_result.rc == 1
 
 
 - name: Copy reverse proxy config

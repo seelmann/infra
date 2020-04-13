@@ -1,7 +1,8 @@
-lxc.network.type = veth
-lxc.network.flags = up
-lxc.network.link = br0
-lxc.network.ipv6 = {{network.ipv6.address}}/{{network.ipv6.netmask}}
-lxc.network.ipv6.gateway = {{network.ipv6.gateway}}
+lxc.net.0.type = veth
+lxc.net.0.flags = up
+lxc.net.0.link = br0
+lxc.net.0.ipv6.address = {{network.ipv6.address}}/{{network.ipv6.netmask}}
+lxc.net.0.ipv6.gateway = {{network.ipv6.gateway}}
 lxc.start.auto = 1
+lxc.apparmor.profile = unconfined
 

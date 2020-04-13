@@ -5,6 +5,6 @@
   delegate_to: "{{hypervisor}}"
 
 - name: Create LXC container
-  command: "lxc-create -n {{inventory_hostname}} -t debian -f /tmp/{{inventory_hostname}}.conf -- -r stretch"
+  command: "lxc-create -n {{inventory_hostname}} -t debian -f /tmp/{{inventory_hostname}}.conf -- -r buster"
   delegate_to: "{{hypervisor}}"
 

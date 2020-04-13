@@ -2,6 +2,6 @@
 
 - name: Install devel packages
   apt:
-    name: ['python', 'vim', 'tmux', 'git', 'subversion', 'maven', 'htop', 'iotop', ,'sysstat', 'xvfb', 'iceweasel']
+    name: ['python', 'vim', 'tmux', 'git', 'subversion', 'maven', 'htop', 'iotop', 'sysstat', 'xvfb', 'iceweasel']
     state: present
 

@@ -4,15 +4,27 @@
   include_tasks: _open-luks.yml
   when: crypt is defined
 
+- name: Mount /etc/fstab (crypt)
+  command: mount -a warn=false
+  when: crypt is defined
+
 - name: Open crypt device (storage.crypt)
   include_tasks: _open-luks.yml
   when: storage is defined and storage.crypt is defined
   vars:
     crypt: '{{storage.crypt}}'
 
+- name: Mount /etc/fstab (storage.crypt)
+  command: mount -a warn=false
+  when: storage is defined and storage.crypt is defined
+
 - name: Open crypt device (storage.storagebox.crypt)
   include_tasks: _open-luks.yml
   when: storage is defined and storage.storagebox is defined and storage.storagebox.crypt is defined
   vars:
     crypt: '{{storage.storagebox.crypt}}'
+
+- name: Mount /etc/fstab (storage.storagebox.crypt)
+  command: mount -a warn=false
+  when: storage is defined and storage.storagebox is defined and storage.storagebox.crypt is defined
 

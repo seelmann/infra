@@ -54,6 +54,8 @@ service pop3 {
 ssl = required
 ssl_cert = </etc/ssl/certs/{{fqdn}}.crt
 ssl_key = </etc/ssl/private/{{fqdn}}.key
+# create with: openssl dhparam -out /etc/dovecot/dh.pem 4096
+ssl_dh = </etc/dovecot/dh.pem
 userdb {
   args = uid=5000 gid=5000 home=/srv/vmail/%d/%n allow_all_users=yes
   driver = static
